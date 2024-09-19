@@ -1,5 +1,5 @@
 simple:
-program input: all matches 
+program input: all matches, all teams
     skal skaffes someway (i csv-format er nok nemmest)
     https://fixturedownload.com/download/csv/uefa-euro-2024
 UI for users (ville være nemmest hvis det alt sammen var i en fil) (ellers er en zipfil finno):

@@ -1,0 +1,12 @@
+let matches =  [{homeTeam: 'Germany', awayTeam: 'Scotland', group: 'Group A'},{homeTeam: 'Hungary', awayTeam: 'Switzerland', group: 'Group A'},{homeTeam: 'Spain', awayTeam: 'Croatia', group: 'Group B'},{homeTeam: 'Italy', awayTeam: 'Albania', group: 'Group B'},{homeTeam: 'Poland', awayTeam: 'Netherlands', group: 'Group D'},{homeTeam: 'Slovenia', awayTeam: 'Denmark', group: 'Group C'},{homeTeam: 'Serbia', awayTeam: 'England', group: 'Group C'},{homeTeam: 'Romania', awayTeam: 'Ukraine', group: 'Group E'},{homeTeam: 'Belgium', awayTeam: 'Slovakia', group: 'Group E'},{homeTeam: 'Austria', awayTeam: 'France', group: 'Group D'},{homeTeam: 'Türkiye', awayTeam: 'Georgia', group: 'Group F'},{homeTeam: 'Portugal', awayTeam: 'Czechia', group: 'Group F'},{homeTeam: 'Croatia', awayTeam: 'Albania', group: 'Group B'},{homeTeam: 'Germany', awayTeam: 'Hungary', group: 'Group A'},{homeTeam: 'Scotland', awayTeam: 'Switzerland', group: 'Group A'},{homeTeam: 'Slovenia', awayTeam: 'Serbia', group: 'Group C'},{homeTeam: 'Denmark', awayTeam: 'England', group: 'Group C'},{homeTeam: 'Spain', awayTeam: 'Italy', group: 'Group B'},{homeTeam: 'Slovakia', awayTeam: 'Ukraine', group: 'Group E'},{homeTeam: 'Poland', awayTeam: 'Austria', group: 'Group D'},{homeTeam: 'Netherlands', awayTeam: 'France', group: 'Group D'},{homeTeam: 'Georgia', awayTeam: 'Czechia', group: 'Group F'},{homeTeam: 'Türkiye', awayTeam: 'Portugal', group: 'Group F'},{homeTeam: 'Belgium', awayTeam: 'Romania', group: 'Group E'},{homeTeam: 'Switzerland', awayTeam: 'Germany', group: 'Group A'},{homeTeam: 'Scotland', awayTeam: 'Hungary', group: 'Group A'},{homeTeam: 'Albania', awayTeam: 'Spain', group: 'Group B'},{homeTeam: 'Croatia', awayTeam: 'Italy', group: 'Group B'},{homeTeam: 'Netherlands', awayTeam: 'Austria', group: 'Group D'},{homeTeam: 'France', awayTeam: 'Poland', group: 'Group D'},{homeTeam: 'England', awayTeam: 'Slovenia', group: 'Group C'},{homeTeam: 'Denmark', awayTeam: 'Serbia', group: 'Group C'},{homeTeam: 'Slovakia', awayTeam: 'Romania', group: 'Group E'},{homeTeam: 'Ukraine', awayTeam: 'Belgium', group: 'Group E'},{homeTeam: 'Georgia', awayTeam: 'Portugal', group: 'Group F'},{homeTeam: 'Czechia', awayTeam: 'Türkiye', group: 'Group F'},];
+async function generateMatches() {
+    const data = await response.text();
+    const results = Papa.parse(data, { header: true });
+    const matches = results.data;
+    console.log(matches);
+}
+
+function addMatches(matches) {
+    
+}
+
