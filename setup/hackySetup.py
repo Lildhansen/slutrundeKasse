@@ -26,9 +26,9 @@ def updateJSFile():
             match = Match(row['home team'],row['away team'],row['group'])
             allMatches.append(match)
         print(allMatches)
-        newData = "let matches =  ["
+        newData = "const matches =  ["
         for match in allMatches:
-            newData += "{homeTeam: '" + match.homeTeam + "', awayTeam: '" + match.awayTeam + "', group: '" + match.group + "'},"
-        newData += "];"
+            newData += "new Match('" + match.homeTeam + "','" + match.awayTeam + "','" + match.group + "'),"
+        newData += "];\n"
         modifiedJsFile.write(newData + jsFileData)
 updateJSFile()
