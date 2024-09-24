@@ -1,8 +1,10 @@
 //note:
-    //make it possible to save the state of the tipskupon (just a save button)
+    //make it possible to save the state of the tipskupon (just a save button) (do this later)
     //add rest of the tipskupon
-
+    //add groups such that you can close all gruppekampe (as well as for the knockout stuff)
     //maybe try to create a way for this js file to read from the csv (and replace the sketchy python script)
+    //add some way to see the scores of each tip (maybe just a legend in the right side)
+    
 class Match{
     constructor(homeTeam,awayTeam,group){
         this.homeTeam = homeTeam;
@@ -14,12 +16,69 @@ class Match{
     }
 }
 const matches =  [new Match('Germany','Scotland','Group A'),new Match('Hungary','Switzerland','Group A'),new Match('Spain','Croatia','Group B'),new Match('Italy','Albania','Group B'),new Match('Poland','Netherlands','Group D'),new Match('Slovenia','Denmark','Group C'),new Match('Serbia','England','Group C'),new Match('Romania','Ukraine','Group E'),new Match('Belgium','Slovakia','Group E'),new Match('Austria','France','Group D'),new Match('Türkiye','Georgia','Group F'),new Match('Portugal','Czechia','Group F'),new Match('Croatia','Albania','Group B'),new Match('Germany','Hungary','Group A'),new Match('Scotland','Switzerland','Group A'),new Match('Slovenia','Serbia','Group C'),new Match('Denmark','England','Group C'),new Match('Spain','Italy','Group B'),new Match('Slovakia','Ukraine','Group E'),new Match('Poland','Austria','Group D'),new Match('Netherlands','France','Group D'),new Match('Georgia','Czechia','Group F'),new Match('Türkiye','Portugal','Group F'),new Match('Belgium','Romania','Group E'),new Match('Switzerland','Germany','Group A'),new Match('Scotland','Hungary','Group A'),new Match('Albania','Spain','Group B'),new Match('Croatia','Italy','Group B'),new Match('Netherlands','Austria','Group D'),new Match('France','Poland','Group D'),new Match('England','Slovenia','Group C'),new Match('Denmark','Serbia','Group C'),new Match('Slovakia','Romania','Group E'),new Match('Ukraine','Belgium','Group E'),new Match('Georgia','Portugal','Group F'),new Match('Czechia','Türkiye','Group F'),];
-const scoreOptions = ["1","x","2","1x","x2","1x2"]
+const scoreOptions = ["1","x","2","1x","x2","12","1x2"]
+const teams = getUniqueTeams()
 
 let sikreTips = 20
 let halvGarderinger = 10
 let helGarderinger = 6
 
+function getUniqueTeams() {
+    uniqueMatches = []
+    for (let match of matches) {
+        if (!uniqueMatches.includes(match.homeTeam)) {
+            uniqueMatches.push(match.homeTeam)
+        }
+        if (!uniqueMatches.includes(match.awayTeam)) {
+            uniqueMatches.push(match.awayTeam)
+        }
+    }
+    return uniqueMatches
+}
+
+//they dont really stack well - if more should be added at the same time maybe look into this
+function showToast(message) {
+    // Create a div for the toast
+    let toast = document.createElement("div");
+    toast.textContent = message;
+
+    // Add styles
+    toast.style.position = "fixed";
+    toast.style.top = "20px";
+    toast.style.left = "50%";
+    toast.style.transform = "translateX(-50%)";
+    toast.style.padding = "10px";
+    toast.style.backgroundColor = "#444";
+    toast.style.color = "white";
+    toast.style.opacity = "0.9";
+    toast.style.borderRadius = "5px";
+    toast.style.textAlign = "center";
+    toast.style.transition = "opacity 0.5s";
+
+    // Append the toast to the body
+    document.body.appendChild(toast);
+
+    // Fade out the toast after 3 seconds
+    setTimeout(function() {
+        toast.style.opacity = "0";
+    }, 2000);
+
+    // Remove the toast after it has faded out
+    setTimeout(function() {
+        document.body.removeChild(toast);
+    }, 3500);
+}
+
+function addNameField() {
+    let nameField = document.createElement("input");
+    nameField.type = "text";
+    nameField.id = "nameField";
+    nameField.placeholder = "Navn";
+    nameField.style.position = "absolute";
+    nameField.style.top = "0";
+    nameField.style.left = "150px"; // Adjust this value
+    document.body.appendChild(nameField);
+}
 
 function addSaveButton() {
     let saveButton = document.createElement("button");
@@ -36,6 +95,7 @@ function addExportButton() {
     exportButton.style.position = "absolute";
     exportButton.style.top = "0";
     exportButton.style.left = "50px";
+    exportButton.onclick = exportTipskupon;
     document.body.appendChild(exportButton); // Append the button to the body
 }
 
@@ -44,30 +104,26 @@ function addButtons() {
     addExportButton()
 }
 
-function blockTippingForSelectedOptions(options) {
-    allSelects = document.getElementsByClassName("resultSelecter");
-    for (const select of allSelects) {
-        for (const option of options) {
-            for (const selectOption of select.options) {
-                if (selectOption.value === option) {
-                    selectOption.disabled = true;
-                }
-            }
-        }
-    }
+function save() {
 }
 
-function unBlockTippingForSelectedOptions(options) {
-    allSelects = document.getElementsByClassName("resultSelecter");
-    for (const select of allSelects) {
-        for (const option of options) {
-            for (const selectOption of select.options) {
-                if (selectOption.value === option) {
-                    selectOption.disabled = false;
-                }
-            }
-        }
+function exportTipskupon() {
+    let nameField = document.getElementById("nameField");
+    if (nameField.value === "") {
+        showToast("Du skal udfylde navn før du kan eksportere!");
+        return;
     }
+    if (sikreTips > 0 || halvGarderinger > 0 || helGarderinger > 0) {
+        showToast("Du har ikke brugt alle dine tips!");
+        return;
+    }
+    if (sikreTips < 0 || halvGarderinger < 0 || helGarderinger < 0) {
+        showToast("Du overskrider grænsen for en slags tips!");
+        return;
+    }
+    //also more checks should be added
+    //check if all matches are filled out (and the numbers are 0 - this should be enough)
+    
 }
 
 function updateRemainingTips(prevValue, currentValue) {
@@ -100,40 +156,32 @@ function updateRemainingTips(prevValue, currentValue) {
             helGarderinger -= 1;
             break;
     }
+    
     let sikreTipsNumber = document.getElementById("sikreTipsNumber");
     let halvGarderingerNumber = document.getElementById("halvGarderingerNumber");
     let helGarderingerNumber = document.getElementById("helGarderingerNumber");
     
+    //handle number coloring
+    let tipDictionary = {[sikreTips]: sikreTipsNumber, [halvGarderinger]: halvGarderingerNumber, [helGarderinger]: helGarderingerNumber};
+    
+    for (let [tipType, tipTypeObject] of Object.entries(tipDictionary)) {
+        console.log(tipType)
+        if (tipType == 0) {
+            tipTypeObject.style.color = "green";
+        } 
+        else if (tipType < 0) {
+            tipTypeObject.style.color = "red";
+        }
+        else {
+            tipTypeObject.style.color = "black";
+        }
+    }
+    
+    
     //update the numbers
     sikreTipsNumber.textContent = sikreTips;
     halvGarderingerNumber.textContent = halvGarderinger;
-    helGarderingerNumber.textContent = helGarderinger;
-    
-    //ensure that numbers does not get below zero
-    if (sikreTips === 0) {
-        sikreTipsNumber.style.color = "red";
-        blockTippingForSelectedOptions(["1","x","2"]);
-    } else {
-        sikreTipsNumber.style.color = "black";
-        unBlockTippingForSelectedOptions(["1","x","2"]);
-    }
-
-    if (halvGarderinger === 0) {
-        halvGarderingerNumber.style.color = "red";
-        blockTippingForSelectedOptions(["1x","x2"]);
-    } else {
-        halvGarderingerNumber.style.color = "black";
-        unBlockTippingForSelectedOptions(["1x","x2"]);
-    }
-
-    if (helGarderinger === 0) {
-        helGarderingerNumber.style.color = "red";
-        blockTippingForSelectedOptions(["1x2"]);
-    } else {
-        helGarderingerNumber.style.color = "black";
-        unBlockTippingForSelectedOptions(["1x2"]);
-    }
-    
+    helGarderingerNumber.textContent = helGarderinger;   
 }
 
 
@@ -249,11 +297,47 @@ function addMatches() {
         matchDiv.appendChild(resultSelecter);   
     }
 }
+
+function addTeamTips() {
+    let outerDiv = document.createElement("div");
+    outerDiv.style.display = "flex";
+    outerDiv.style.flexDirection = "column";
+    outerDiv.style.alignItems = "center";
+    // outerDiv.style.justifyContent = "center";
+    document.body.appendChild(outerDiv);
+    
+    //add ro16
+    
+    //add ro8
+    
+    //add semi
+    
+    //add finale
+    
+    //add winner
+    
+    
+}
+
+function addExtraTips() {
+    //add how far dk reaches
+    
+    //add top goal scorer
+    
+    //maybe add danish guy to score
+    
+    //maybe add someone who gets red card
+    
+    
+    
+}
     
 function setup() {
+    console.log(teams)
+    addNameField()
     addButtons()
     addRemainingTipsContainer()
     addMatches()
-    
+    addTeamTips()
     //if there is a saved state, load it
 }
