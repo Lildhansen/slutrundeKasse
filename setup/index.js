@@ -2,9 +2,10 @@
     //make it possible to save the state of the tipskupon (just a save button) (do this later)
     //add rest of the tipskupon
     //add groups such that you can close all gruppekampe (as well as for the knockout stuff)
-    //maybe try to create a way for this js file to read from the csv (and replace the sketchy python script)
     //add some way to see the scores of each tip (maybe just a legend in the right side)
     
+    //maybe add some reference where you can see all the groups and the teams in them
+    //maybe try to create a way for this js file to read from the csv (and replace the sketchy python script)
 class Match{
     constructor(homeTeam,awayTeam,group){
         this.homeTeam = homeTeam;
@@ -184,6 +185,23 @@ function updateRemainingTips(prevValue, currentValue) {
     helGarderingerNumber.textContent = helGarderinger;   
 }
 
+function handleKnockoutSelectInput(currentSelect, teamsDiv) {
+    let selectedOptionValue = currentSelect.options[currentSelect.selectedIndex].value;
+    for (let select of teamsDiv.querySelectorAll('select')) {
+        if (select !== currentSelect) { // Skip the current select
+            for (let option of select.options) {
+                if (option.value === selectedOptionValue) {
+                    option.disabled = true;
+                }
+            }
+        }
+    }
+    
+    
+    
+    
+}
+
 
 
 
@@ -302,25 +320,126 @@ function addTeamTips() {
     let outerDiv = document.createElement("div");
     outerDiv.style.display = "flex";
     outerDiv.style.flexDirection = "column";
-    outerDiv.style.alignItems = "center";
+    // outerDiv.style.alignItems = "center";
     // outerDiv.style.justifyContent = "center";
     document.body.appendChild(outerDiv);
     
     //add ro16
-    
+    let ro16Div = document.createElement("div");
+    ro16Div.id = "ro16Div";
+    let ro16Header = document.createElement("h2");
+    ro16Header.textContent = "Hold i ottendedelsfinalerne";
+    ro16Div.appendChild(ro16Header);
+    for (let i = 0; i < 8; i++) {
+        let ro16MatchSelect = document.createElement("select");
+        ro16MatchSelect.type = "text";
+        //add placeholder text and no selected option by default
+        let defaultOptionRo16 = new Option("Hold "+(i+1), "", true, true);
+        defaultOptionRo16.disabled = true;
+        ro16MatchSelect.add(defaultOptionRo16);
+        ro16MatchSelect.style.margin = "5px";
+        for (const team of teams) {
+            ro16MatchSelect.add(new Option(team));
+            ro16MatchSelect.onchange = function() {
+                handleKnockoutSelectInput(this, ro16Div);
+            };
+        }
+        ro16Div.appendChild(ro16MatchSelect);
+    }
+    outerDiv.appendChild(ro16Div);
     //add ro8
+    let ro8Div = document.createElement("div");
+    ro8Div.id = "ro8Div";
+    let ro8Header = document.createElement("h2");
+    ro8Header.textContent = "Hold i kvartfinalerne";
+    ro8Div.appendChild(ro8Header);
+    for (let i = 0; i < 4; i++) {
+        let ro8MatchSelect = document.createElement("select");
+        ro8MatchSelect.type = "text";
+        //add placeholder text and no selected option by default
+        let defaultOptionRo8 = new Option("Hold "+(i+1), "", true, true);
+        defaultOptionRo8.disabled = true;
+        ro8MatchSelect.add(defaultOptionRo8);
+        ro8MatchSelect.style.margin = "5px";
+        for (const team of teams) {
+            ro8MatchSelect.add(new Option(team));
+            ro8MatchSelect.onchange = function() {
+                handleKnockoutSelectInput(this, ro8Div);
+            }
+            ro8Div.appendChild(ro8MatchSelect);
+        }
+        outerDiv.appendChild(ro8Div);
+    }
     
-    //add semi
-    
-    //add finale
-    
+    //add semi-finals
+    let semiDiv = document.createElement("div");
+    semiDiv.id = "semiDiv";
+    let semiHeader = document.createElement("h2");
+    semiHeader.textContent = "Hold i semifinalerne";
+    semiDiv.appendChild(semiHeader);
+    for (let i = 0; i < 2; i++) {
+        let semiMatchSelect = document.createElement("select");
+        semiMatchSelect.type = "text";
+        //add placeholder text and no selected option by default
+        let defaultOptionSemis = new Option("Hold "+(i+1), "", true, true);
+        defaultOptionSemis.disabled = true;
+        semiMatchSelect.add(defaultOptionSemis);
+        semiMatchSelect.style.margin = "5px";
+        for (const team of teams) {
+            semiMatchSelect.add(new Option(team));
+            semiMatchSelect.onchange = function() {
+                handleKnockoutSelectInput(this, semiDiv);
+            };
+        }
+        semiDiv.appendChild(semiMatchSelect);
+    }
+    outerDiv.appendChild(semiDiv);
+
+    //add finals
+    let finalsDiv = document.createElement("div");
+    finalsDiv.id = "finalsDiv";
+    let finalsHeader = document.createElement("h2");
+    finalsHeader.textContent = "Hold i finalen";
+    finalsDiv.appendChild(finalsHeader);
+    for (let i = 0; i < 2; i++) {
+        let finalsMatchSelect = document.createElement("select");
+        finalsMatchSelect.type = "text";
+        //add placeholder text and no selected option by default
+        let defaultOptionFinals = new Option("Hold "+(i+1), "", true, true);
+        defaultOptionFinals.disabled = true;
+        finalsMatchSelect.add(defaultOptionFinals);
+        finalsMatchSelect.style.margin = "5px";
+        for (const team of teams) {
+            finalsMatchSelect.add(new Option(team));
+            finalsMatchSelect.onchange = function() {
+                handleKnockoutSelectInput(this, finalsDiv);
+            }
+        }
+        finalsDiv.appendChild(finalsMatchSelect);
+    }
+    outerDiv.appendChild(finalsDiv);
+
     //add winner
-    
-    
+    let winnerDiv = document.createElement("div");
+    winnerDiv.id = "winnerDiv";
+    let winnerHeader = document.createElement("h2");
+    winnerHeader.textContent = "Vinder";
+    winnerDiv.appendChild(winnerHeader);
+    let winnerMatchSelect = document.createElement("select");
+    winnerMatchSelect.type = "text";
+    //add placeholder text and no selected option by default
+    let defaultOptionWinner = new Option("Vinder", "", true, true);
+    defaultOptionWinner.disabled = true;
+    winnerMatchSelect.add(defaultOptionWinner);
+    winnerMatchSelect.style.margin = "5px";
+    for (const team of teams)
+        winnerMatchSelect.add(new Option(team));
+    winnerDiv.appendChild(winnerMatchSelect);
+    outerDiv.appendChild(winnerDiv);   
 }
 
 function addExtraTips() {
-    //add how far dk reaches
+    //add how far dk reaches (this should be autofilled based on the teams selected)
     
     //add top goal scorer
     
