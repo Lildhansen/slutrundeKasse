@@ -19,10 +19,15 @@ class Match{
 const matches =  [new Match('Germany','Scotland','Group A'),new Match('Hungary','Switzerland','Group A'),new Match('Spain','Croatia','Group B'),new Match('Italy','Albania','Group B'),new Match('Poland','Netherlands','Group D'),new Match('Slovenia','Denmark','Group C'),new Match('Serbia','England','Group C'),new Match('Romania','Ukraine','Group E'),new Match('Belgium','Slovakia','Group E'),new Match('Austria','France','Group D'),new Match('Türkiye','Georgia','Group F'),new Match('Portugal','Czechia','Group F'),new Match('Croatia','Albania','Group B'),new Match('Germany','Hungary','Group A'),new Match('Scotland','Switzerland','Group A'),new Match('Slovenia','Serbia','Group C'),new Match('Denmark','England','Group C'),new Match('Spain','Italy','Group B'),new Match('Slovakia','Ukraine','Group E'),new Match('Poland','Austria','Group D'),new Match('Netherlands','France','Group D'),new Match('Georgia','Czechia','Group F'),new Match('Türkiye','Portugal','Group F'),new Match('Belgium','Romania','Group E'),new Match('Switzerland','Germany','Group A'),new Match('Scotland','Hungary','Group A'),new Match('Albania','Spain','Group B'),new Match('Croatia','Italy','Group B'),new Match('Netherlands','Austria','Group D'),new Match('France','Poland','Group D'),new Match('England','Slovenia','Group C'),new Match('Denmark','Serbia','Group C'),new Match('Slovakia','Romania','Group E'),new Match('Ukraine','Belgium','Group E'),new Match('Georgia','Portugal','Group F'),new Match('Czechia','Türkiye','Group F'),];
 const scoreOptions = ["1","x","2","1x","x2","12","1x2"]
 const teams = getUniqueTeams()
+const randomMessages = ["","(Modigt!)", "(Er du nu HELT sikker på det?)", "(Ej kom nu, vi er da meget bedre end det!)", "(Interessant!)"];
+
+    
 
 let sikreTips = 20
 let halvGarderinger = 10
 let helGarderinger = 6
+
+let howFarDenmarkReachesResult = "";
 
 function getUniqueTeams() {
     uniqueMatches = []
@@ -185,6 +190,7 @@ function updateRemainingTips(prevValue, currentValue) {
     helGarderingerNumber.textContent = helGarderinger;   
 }
 
+//den skal også håndtere at frigive hvis man vælger et andet holdt (altså bruge prev value)
 function handleKnockoutSelectInput(currentSelect, teamsDiv) {
     let selectedOptionValue = currentSelect.options[currentSelect.selectedIndex].value;
     for (let select of teamsDiv.querySelectorAll('select')) {
@@ -196,10 +202,68 @@ function handleKnockoutSelectInput(currentSelect, teamsDiv) {
             }
         }
     }
+    let previousValue = currentSelect.getAttribute('data-prev-value');
+    if (previousValue !== "") {
+        for (let select of teamsDiv.querySelectorAll('select')) {
+            if (select !== currentSelect) { // Skip the current select
+                for (let option of select.options) {
+                    if (option.value === previousValue) {
+                        option.disabled = false;
+                    }
+                }
+            }
+        }
+    }
+    let howFarDenmarkReachesResultBackup = howFarDenmarkReachesResult;
+    //check if denmark was added:
+    let prevValue = currentSelect.getAttribute('data-prev-value');
+    if (currentSelect.value === "Denmark") {
+        if (currentSelect.parentNode.id == "ro8Div" || currentSelect.parentNode.id == "semiDiv" || currentSelect.parentNode.id == "finalsDiv") {
+            howFarDenmarkReachesResult = "Mindst en kvartfinale";
+        }
+        else if (currentSelect.parentNode.id == "ro16Div") {
+            howFarDenmarkReachesResult = "Mindst en ottendedelsfinale";
+        }
+        else {
+            howFarDenmarkReachesResult = "Ud i gruppespillet";
+        }
+    }
     
-    
-    
-    
+    //check if denmark was removed ():
+    else if (prevValue === "Denmark") {
+        let ro16Div = document.getElementById("ro16Div");
+        let ro8Div = document.getElementById("ro8Div");
+        let semiDiv = document.getElementById("semiDiv");
+        let finalsDiv = document.getElementById("finalsDiv");
+
+        let denmarkIsInRo8 = Array.from(ro8Div.querySelectorAll('select')).some(select => select.value === "Denmark");
+        let denmarkIsInSemi = Array.from(semiDiv.querySelectorAll('select')).some(select => select.value === "Denmark");
+        let denmarkIsInFinals = Array.from(finalsDiv.querySelectorAll('select')).some(select => select.value === "Denmark");
+        let denmarkIsInRo16 = Array.from(ro16Div.querySelectorAll('select')).some(select => select.value === "Denmark");
+        if (denmarkIsInRo8 || denmarkIsInSemi || denmarkIsInFinals) {
+            howFarDenmarkReachesResult = "Mindst en kvartfinale";
+        }
+        else if (denmarkIsInRo16) {
+            howFarDenmarkReachesResult = "Mindst en ottendedelsfinale";
+        }
+        else {
+            howFarDenmarkReachesResult = "Ud i gruppespillet";
+        } 
+    }
+        
+    else {
+        howFarDenmarkReachesResult = "Ud i gruppespillet";
+    }
+    elem = document.getElementById("howFarDenmarkReachesResultElement");
+    //if the results has not changed then dont update the text (also avoid the random messages)
+    console.log("1: ", elem.textContent)
+    console.log("2: ",howFarDenmarkReachesResult)
+    if (howFarDenmarkReachesResultBackup === howFarDenmarkReachesResult)
+        return;
+    elem.textContent = howFarDenmarkReachesResult;
+      
+    randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
+    elem.textContent += randomMessage;
 }
 
 
@@ -338,10 +402,12 @@ function addTeamTips() {
         defaultOptionRo16.disabled = true;
         ro16MatchSelect.add(defaultOptionRo16);
         ro16MatchSelect.style.margin = "5px";
+        ro16MatchSelect.setAttribute('data-prev-value', ro16MatchSelect.value);
         for (const team of teams) {
             ro16MatchSelect.add(new Option(team));
             ro16MatchSelect.onchange = function() {
                 handleKnockoutSelectInput(this, ro16Div);
+                this.setAttribute('data-prev-value', this.value);
             };
         }
         ro16Div.appendChild(ro16MatchSelect);
@@ -361,10 +427,12 @@ function addTeamTips() {
         defaultOptionRo8.disabled = true;
         ro8MatchSelect.add(defaultOptionRo8);
         ro8MatchSelect.style.margin = "5px";
+        ro8MatchSelect.setAttribute('data-prev-value', ro8MatchSelect.value);
         for (const team of teams) {
             ro8MatchSelect.add(new Option(team));
             ro8MatchSelect.onchange = function() {
                 handleKnockoutSelectInput(this, ro8Div);
+                this.setAttribute('data-prev-value', this.value);
             }
             ro8Div.appendChild(ro8MatchSelect);
         }
@@ -385,10 +453,12 @@ function addTeamTips() {
         defaultOptionSemis.disabled = true;
         semiMatchSelect.add(defaultOptionSemis);
         semiMatchSelect.style.margin = "5px";
+        semiMatchSelect.setAttribute('data-prev-value', semiMatchSelect.value);
         for (const team of teams) {
             semiMatchSelect.add(new Option(team));
             semiMatchSelect.onchange = function() {
                 handleKnockoutSelectInput(this, semiDiv);
+                this.setAttribute('data-prev-value', this.value);
             };
         }
         semiDiv.appendChild(semiMatchSelect);
@@ -409,10 +479,12 @@ function addTeamTips() {
         defaultOptionFinals.disabled = true;
         finalsMatchSelect.add(defaultOptionFinals);
         finalsMatchSelect.style.margin = "5px";
+        finalsMatchSelect.setAttribute('data-prev-value', finalsMatchSelect.value);
         for (const team of teams) {
             finalsMatchSelect.add(new Option(team));
             finalsMatchSelect.onchange = function() {
                 handleKnockoutSelectInput(this, finalsDiv);
+                this.setAttribute('data-prev-value', this.value);
             }
         }
         finalsDiv.appendChild(finalsMatchSelect);
@@ -438,18 +510,58 @@ function addTeamTips() {
     outerDiv.appendChild(winnerDiv);   
 }
 
-function addExtraTips() {
-    //add how far dk reaches (this should be autofilled based on the teams selected)
+function getHowFarDenmarkReaches() {
+    tempTeamsList = []
+    //atleast ro8
+    ro8Div = document.getElementById("ro8Div");
+    semiDiv = document.getElementById("semiDiv");
+    finalsDiv = document.getElementById("finalsDiv");
+    [ro8Div, semiDiv, finalsDiv].forEach(div => {
+        div.querySelectorAll('select').forEach(select => {
+            tempTeamsList.push(select.value);
+        });
+    });
+    if (tempTeamsList.includes("Denmark")) {
+        return "Mindst en kvartfinale";
+    }
     
-    //add top goal scorer
-    
-    //maybe add danish guy to score
-    
-    //maybe add someone who gets red card
-    
-    
+    //out in ro16
+    ro16Div = document.getElementById("ro16Div");
+    for (let select of ro16Div.querySelectorAll('select')) {
+        if (select.value === "Denmark") {
+            return "Ud i ottendedelsfinalerne";
+        }
+    }
+    return "Ud i gruppespillet";
+    //out in groups
     
 }
+
+
+function addExtraTips() {
+    //add how far denmark reaches
+    let howFarDenmarkReachesDiv = document.createElement("div");
+    let howFarDenmarkReachesHeader = document.createElement("h2");
+    howFarDenmarkReachesHeader.textContent = "Hvor langt når Danmark?";
+    howFarDenmarkReachesHeader.style.display = 'inline-block';
+    howFarDenmarkReachesHeader.style.marginRight = '10px';
+    howFarDenmarkReachesResultElement = document.createElement("p");
+    howFarDenmarkReachesResultElement.style.display = 'inline-block';
+    howFarDenmarkReachesResultElement.id = "howFarDenmarkReachesResultElement";
+    howFarDenmarkReachesResultElement.textContent = howFarDenmarkReachesResult;
+    
+    howFarDenmarkReachesDiv.appendChild(howFarDenmarkReachesHeader);
+    howFarDenmarkReachesDiv.appendChild(howFarDenmarkReachesResultElement);
+    
+    document.body.appendChild(howFarDenmarkReachesDiv);        
+        //add top goal scorer
+        
+        //maybe add danish guy to score
+        
+        //maybe add someone who gets red card
+    }
+        
+    
     
 function setup() {
     console.log(teams)
@@ -458,5 +570,6 @@ function setup() {
     addRemainingTipsContainer()
     addMatches()
     addTeamTips()
+    addExtraTips()
     //if there is a saved state, load it
 }
