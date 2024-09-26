@@ -545,7 +545,7 @@ function addExtraTips() {
     howFarDenmarkReachesHeader.textContent = "Hvor langt når Danmark?";
     howFarDenmarkReachesHeader.style.display = 'inline-block';
     howFarDenmarkReachesHeader.style.marginRight = '10px';
-    howFarDenmarkReachesResultElement = document.createElement("p");
+    let howFarDenmarkReachesResultElement = document.createElement("p");
     howFarDenmarkReachesResultElement.style.display = 'inline-block';
     howFarDenmarkReachesResultElement.id = "howFarDenmarkReachesResultElement";
     howFarDenmarkReachesResultElement.textContent = howFarDenmarkReachesResult;
@@ -554,17 +554,16 @@ function addExtraTips() {
     howFarDenmarkReachesDiv.appendChild(howFarDenmarkReachesResultElement);
     
     document.body.appendChild(howFarDenmarkReachesDiv);        
-        //add top goal scorer
-        
-        //maybe add danish guy to score
-        
-        //maybe add someone who gets red card
-    }
+    //add top goal scorer
+    
+    //maybe add danish guy to score
+    
+    //maybe add someone who gets red card
+}
         
     
     
 function setup() {
-    console.log(teams)
     addNameField()
     addButtons()
     addRemainingTipsContainer()
