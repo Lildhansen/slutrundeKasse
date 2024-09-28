@@ -3,9 +3,11 @@
     //add rest of the tipskupon
     //add groups such that you can close all gruppekampe (as well as for the knockout stuff)
     //add some way to see the scores of each tip (maybe just a legend in the right side)
+        //or when u hover over the header of something it will show how many points it gives (with possible extra details on it)
     
     //maybe add some reference where you can see all the groups and the teams in them
     //maybe try to create a way for this js file to read from the csv (and replace the sketchy python script)
+    
 class Match{
     constructor(homeTeam,awayTeam,group){
         this.homeTeam = homeTeam;
@@ -250,10 +252,12 @@ function handleKnockoutSelectInput(currentSelect, teamsDiv) {
             howFarDenmarkReachesResult = "Ud i gruppespillet";
         } 
     }
-        
-    else {
-        howFarDenmarkReachesResult = "Ud i gruppespillet";
+    //if all ottendelsfinaler teams have been added (and denmark has not been select), fill out the how far denmark reaches
+    if (Array.from(ro16Div.querySelectorAll('select')).every(select => select.value !== "") 
+        && !Array.from(ro16Div.querySelectorAll('select')).some(select => select.value === "Denmark")) {
+        howFarDenmarkReachesResult = "Ud i grupperspillet";
     }
+        
     elem = document.getElementById("howFarDenmarkReachesResultElement");
     //if the results has not changed then dont update the text (also avoid the random messages)
     console.log("1: ", elem.textContent)
@@ -537,12 +541,10 @@ function getHowFarDenmarkReaches() {
     
 }
 
-
-function addExtraTips() {
-    //add how far denmark reaches
+function addHowFarDenmarkReaches() {
     let howFarDenmarkReachesDiv = document.createElement("div");
     let howFarDenmarkReachesHeader = document.createElement("h2");
-    howFarDenmarkReachesHeader.textContent = "Hvor langt når Danmark?";
+    howFarDenmarkReachesHeader.textContent = "Hvor langt når Danmark (udfyldes automatisk)?";
     howFarDenmarkReachesHeader.style.display = 'inline-block';
     howFarDenmarkReachesHeader.style.marginRight = '10px';
     let howFarDenmarkReachesResultElement = document.createElement("p");
@@ -553,12 +555,108 @@ function addExtraTips() {
     howFarDenmarkReachesDiv.appendChild(howFarDenmarkReachesHeader);
     howFarDenmarkReachesDiv.appendChild(howFarDenmarkReachesResultElement);
     
-    document.body.appendChild(howFarDenmarkReachesDiv);        
-    //add top goal scorer
+    document.body.appendChild(howFarDenmarkReachesDiv); 
+}
+
+function addTopGoalScorer() {
+    let topGoalScorerDiv = document.createElement("div");
+    topGoalScorerDiv.style.display = "flex";
+    topGoalScorerDiv.style.alignItems = 'center';
+    let topGoalScorerHeader = document.createElement("h2");
+    topGoalScorerHeader.textContent = "Topscorer: ";
+    topGoalScorerHeader.style.display = 'inline-block';
+    topGoalScorerHeader.style.marginRight = '10px';
+    let topGoalScorerInput = document.createElement("input");
+    topGoalScorerInput.type = "text";
+    topGoalScorerInput.placeholder = "Navn";
+    topGoalScorerInput.style.height = "30px";
+    topGoalScorerInput.style
     
-    //maybe add danish guy to score
+    topGoalScorerDiv.appendChild(topGoalScorerHeader);
+    topGoalScorerDiv.appendChild(topGoalScorerInput);
+    document.body.appendChild(topGoalScorerDiv);
+}
+
+function addHowManyGoalsByPickedDane() {
+    let daneScoringDiv = document.getElementById("daneScoringDiv");
+    let daneToScoreInput = daneScoringDiv.querySelector('input');
     
-    //maybe add someone who gets red card
+    let daneScoringValue = daneToScoreInput.value;
+    let howManyGoalsDaneScoresHeader = document.getElementById("howManyGoalsDaneScoresHeader");
+    let howManyGoalsDaneScoresInput = document.getElementById("howManyGoalsDaneScoresInput");
+    
+    if (daneScoringValue === "") {
+        howManyGoalsDaneScoresHeader.style.display = 'none';
+        howManyGoalsDaneScoresInput.style.display = 'none';
+    }
+    
+    else {
+        howManyGoalsDaneScoresHeader.textContent = `... og hvor mange mål scorer ${daneScoringValue}:`;
+        howManyGoalsDaneScoresHeader.style.display = 'inline-block';
+        howManyGoalsDaneScoresInput.style.display = 'inline-block';
+    }
+    
+}
+
+function addDaneToScore() {
+    let daneScoringDiv = document.createElement("div");
+    daneScoringDiv.id = "daneScoringDiv";
+    daneScoringDiv.style.display = "flex";
+    daneScoringDiv.style.alignItems = 'center';
+    let daneToScoreHeader = document.createElement("h2");
+    daneToScoreHeader.textContent = "Dansker der scorer:";
+    daneToScoreHeader.style.display = 'inline-block';
+    daneToScoreHeader.style.marginRight = '10px';
+    let daneToScoreInput = document.createElement("input");
+    daneToScoreInput.type = "text";
+    daneToScoreInput.placeholder = "Navn";
+    daneToScoreInput.style.height = "30px";
+    daneToScoreInput.onblur = addHowManyGoalsByPickedDane;
+    
+    daneScoringDiv.appendChild(daneToScoreHeader);
+    daneScoringDiv.appendChild(daneToScoreInput);
+    
+    //add how many goals that dane scores
+    let daneScoringValue = daneToScoreInput.value;
+    let howManyGoalsDaneScoresHeader = document.createElement("h2");
+    howManyGoalsDaneScoresHeader.textContent = `... og hvor mange mål scorer ${daneScoringValue}:`;
+    howManyGoalsDaneScoresHeader.style.display = 'inline-block';
+    howManyGoalsDaneScoresHeader.style.marginRight = '10px';
+    howManyGoalsDaneScoresHeader.style.marginLeft = '10px';
+    howManyGoalsDaneScoresHeader.id = "howManyGoalsDaneScoresHeader";
+    howManyGoalsDaneScoresHeader.style.display = 'none';
+    let howManyGoalsDaneScoresInput = document.createElement("input");
+    howManyGoalsDaneScoresInput.type = "number";
+    howManyGoalsDaneScoresInput.min = "1";
+    howManyGoalsDaneScoresInput.onchange = function() {
+        if (this.value < 1) {
+            this.value = 1;
+        }
+    };
+    howManyGoalsDaneScoresInput.placeholder = "Mål";
+    howManyGoalsDaneScoresInput.style.height = "30px";
+    howManyGoalsDaneScoresInput.id = "howManyGoalsDaneScoresInput";
+    howManyGoalsDaneScoresInput.style.display = 'none';
+    daneScoringDiv.appendChild(howManyGoalsDaneScoresHeader);
+    daneScoringDiv.appendChild(howManyGoalsDaneScoresInput);
+   
+    
+    
+    
+    document.body.appendChild(daneScoringDiv);
+}
+
+function addPlayerToGetARedCard() {
+    
+}
+
+
+function addExtraTips() {
+    addHowFarDenmarkReaches()
+           
+    addTopGoalScorer()
+    addDaneToScore()
+    addPlayerToGetARedCard()
 }
         
     
