@@ -1,12 +1,11 @@
+
 //note:
-    //make it possible to save the state of the tipskupon (just a save button) (do this later)
-    //add rest of the tipskupon
-    //add groups such that you can close all gruppekampe (as well as for the knockout stuff)
-    //add some way to see the scores of each tip (maybe just a legend in the right side)
-        //or when u hover over the header of something it will show how many points it gives (with possible extra details on it)
+//add groups such that you can close all gruppekampe (as well as for the knockout stuff)
+    //fix save button
+    //fix export button
+        //also update the requirements for exporting (all must be filled out)
     
     //maybe add some reference where you can see all the groups and the teams in them
-    //maybe try to create a way for this js file to read from the csv (and replace the sketchy python script)
     
 class Match{
     constructor(homeTeam,awayTeam,group){
@@ -81,7 +80,7 @@ function addNameField() {
     let nameField = document.createElement("input");
     nameField.type = "text";
     nameField.id = "nameField";
-    nameField.placeholder = "Navn";
+    nameField.placeholder = "Indtast navn her";
     nameField.style.position = "absolute";
     nameField.style.top = "0";
     nameField.style.left = "150px"; // Adjust this value
@@ -281,8 +280,7 @@ function addRemainingTipsContainer() {
     remainingTipsContainer.style.right = "0";
     remainingTipsContainer.style.width = "20%";
     remainingTipsContainer.style.border = "2px solid black";
-    document.body.appendChild(remainingTipsContainer);
-
+    
     //add text elements
     
     //sikre tips text
@@ -318,20 +316,26 @@ function addRemainingTipsContainer() {
     sikreTipsDiv.appendChild(sikreTipsText);
     sikreTipsDiv.appendChild(sikreTipsNumber);
     remainingTipsContainer.appendChild(sikreTipsDiv);
-
+    
     // Create a div for halv garderinger
     let halvGarderingerDiv = document.createElement("div");
     halvGarderingerDiv.style.display = "flex";
     halvGarderingerDiv.appendChild(halvGarderingerText);
     halvGarderingerDiv.appendChild(halvGarderingerNumber);
     remainingTipsContainer.appendChild(halvGarderingerDiv);
-
+    
     // Create a div for hel garderinger
     let helGarderingerDiv = document.createElement("div");
     helGarderingerDiv.style.display = "flex";
     helGarderingerDiv.appendChild(helGarderingerText);
     helGarderingerDiv.appendChild(helGarderingerNumber);
     remainingTipsContainer.appendChild(helGarderingerDiv);
+    
+    let pointsInfo = document.createElement("p");
+    pointsInfo.textContent = "Tip: Hold musen over overskrifterne for at se hvor mange point de giver";
+    pointsInfo.style.fontWeight = 'bold';
+    remainingTipsContainer.appendChild(pointsInfo);
+    document.body.appendChild(remainingTipsContainer);
 }
 
 
@@ -339,6 +343,12 @@ function addMatches() {
     const allMatchesDiv = document.getElementById("matchesContainer")
     allMatchesDiv.style.flexDirection = "column";
     allMatchesDiv.style.alignItems = "center"; // This will horizontally center the matchDiv
+    let allMatchesHeader = document.createElement("h2");
+    allMatchesHeader.style.marginBottom = "5px";
+    allMatchesHeader.style.marginTop = "40px";
+    allMatchesHeader.textContent = "Gruppespilskampe:";
+    allMatchesHeader.id = "gruppespilsHeader";
+    allMatchesDiv.appendChild(allMatchesHeader);
     let h4 = null;
     let matchDiv = null;
     let resultSelecter = null;
@@ -397,6 +407,7 @@ function addTeamTips() {
     ro16Div.id = "ro16Div";
     let ro16Header = document.createElement("h2");
     ro16Header.textContent = "Hold i ottendedelsfinalerne";
+    ro16Header.id = "ro16Header";
     ro16Div.appendChild(ro16Header);
     for (let i = 0; i < 8; i++) {
         let ro16MatchSelect = document.createElement("select");
@@ -421,6 +432,7 @@ function addTeamTips() {
     let ro8Div = document.createElement("div");
     ro8Div.id = "ro8Div";
     let ro8Header = document.createElement("h2");
+    ro8Header.id = "ro8Header";
     ro8Header.textContent = "Hold i kvartfinalerne";
     ro8Div.appendChild(ro8Header);
     for (let i = 0; i < 4; i++) {
@@ -448,6 +460,7 @@ function addTeamTips() {
     semiDiv.id = "semiDiv";
     let semiHeader = document.createElement("h2");
     semiHeader.textContent = "Hold i semifinalerne";
+    semiHeader.id = "semiHeader";
     semiDiv.appendChild(semiHeader);
     for (let i = 0; i < 2; i++) {
         let semiMatchSelect = document.createElement("select");
@@ -474,6 +487,7 @@ function addTeamTips() {
     finalsDiv.id = "finalsDiv";
     let finalsHeader = document.createElement("h2");
     finalsHeader.textContent = "Hold i finalen";
+    finalsHeader.id = "finalsHeader";
     finalsDiv.appendChild(finalsHeader);
     for (let i = 0; i < 2; i++) {
         let finalsMatchSelect = document.createElement("select");
@@ -500,6 +514,7 @@ function addTeamTips() {
     winnerDiv.id = "winnerDiv";
     let winnerHeader = document.createElement("h2");
     winnerHeader.textContent = "Vinder";
+    winnerHeader.id = "winnerHeader";
     winnerDiv.appendChild(winnerHeader);
     let winnerMatchSelect = document.createElement("select");
     winnerMatchSelect.type = "text";
@@ -547,6 +562,7 @@ function addHowFarDenmarkReaches() {
     howFarDenmarkReachesHeader.textContent = "Hvor langt når Danmark (udfyldes automatisk)?";
     howFarDenmarkReachesHeader.style.display = 'inline-block';
     howFarDenmarkReachesHeader.style.marginRight = '10px';
+    howFarDenmarkReachesHeader.id = "howFarDenmarkReachesHeader";
     let howFarDenmarkReachesResultElement = document.createElement("p");
     howFarDenmarkReachesResultElement.style.display = 'inline-block';
     howFarDenmarkReachesResultElement.id = "howFarDenmarkReachesResultElement";
@@ -566,6 +582,7 @@ function addTopGoalScorer() {
     topGoalScorerHeader.textContent = "Topscorer: ";
     topGoalScorerHeader.style.display = 'inline-block';
     topGoalScorerHeader.style.marginRight = '10px';
+    topGoalScorerHeader.id = "topGoalScorerHeader";
     let topGoalScorerInput = document.createElement("input");
     topGoalScorerInput.type = "text";
     topGoalScorerInput.placeholder = "Navn";
@@ -594,6 +611,7 @@ function addHowManyGoalsByPickedDane() {
         howManyGoalsDaneScoresHeader.textContent = `... og hvor mange mål scorer ${daneScoringValue}:`;
         howManyGoalsDaneScoresHeader.style.display = 'inline-block';
         howManyGoalsDaneScoresInput.style.display = 'inline-block';
+        showPointsInfo(howManyGoalsDaneScoresHeader,`1 point for at gætte antal mål ${daneScoringValue} scorer`);
     }
     
 }
@@ -605,6 +623,7 @@ function addDaneToScore() {
     daneScoringDiv.style.alignItems = 'center';
     let daneToScoreHeader = document.createElement("h2");
     daneToScoreHeader.textContent = "Dansker der scorer:";
+    daneToScoreHeader.id = "daneToScoreHeader";
     daneToScoreHeader.style.display = 'inline-block';
     daneToScoreHeader.style.marginRight = '10px';
     let daneToScoreInput = document.createElement("input");
@@ -647,6 +666,24 @@ function addDaneToScore() {
 }
 
 function addPlayerToGetARedCard() {
+    let playerToGetRedCardedDiv = document.createElement("div");
+    playerToGetRedCardedDiv.style.display = "flex";
+    playerToGetRedCardedDiv.style.alignItems = 'center';
+    let playerToGetRedCardedHeader = document.createElement("h2");
+    playerToGetRedCardedHeader.textContent = "Spiller der får rødt kort: ";
+    playerToGetRedCardedHeader.style.display = 'inline-block';
+    playerToGetRedCardedHeader.style.marginRight = '10px';
+    playerToGetRedCardedHeader.id = "playerToGetRedCardedHeader";
+    let playerToGetRedCardedInput = document.createElement("input");
+    playerToGetRedCardedInput.type = "text";
+    playerToGetRedCardedInput.placeholder = "Navn";
+    playerToGetRedCardedInput.style.height = "30px";
+    playerToGetRedCardedInput.style
+    
+    playerToGetRedCardedDiv.appendChild(playerToGetRedCardedHeader);
+    playerToGetRedCardedDiv.appendChild(playerToGetRedCardedInput);
+    document.body.appendChild(playerToGetRedCardedDiv);
+    
     
 }
 
@@ -658,7 +695,68 @@ function addExtraTips() {
     addDaneToScore()
     addPlayerToGetARedCard()
 }
-        
+
+function showPointsInfo(headerElem,text) {
+    let pointsInfo = document.createElement("span");
+    headerElem.style.position = 'relative';
+    pointsInfo.textContent = text;
+    pointsInfo.style.display = 'none';
+    pointsInfo.style.position = 'absolute';
+    pointsInfo.style.backgroundColor = '#f9f9f9';
+    pointsInfo.style.border = '1px solid #ccc';
+    pointsInfo.style.borderRadius = '4px';
+    pointsInfo.style.padding = '5px';
+    pointsInfo.style.zIndex = '1';
+    pointsInfo.style.bottom = '100%';
+    pointsInfo.style.left = '0';
+    pointsInfo.style.marginLeft = '0';
+    pointsInfo.style.width = '1000px';
+    pointsInfo.style.textAlign = 'center';
+    pointsInfo.style.bottom = '110%';
+    pointsInfo.style.fontSize = '0.5em';
+    pointsInfo.style.color = 'green';
+
+    headerElem.appendChild(pointsInfo);
+
+    headerElem.onmouseover = function() {
+        pointsInfo.style.display = 'inline';
+    };
+
+    headerElem.onmouseout = function() {
+        pointsInfo.style.display = 'none';
+    };
+
+}
+      
+function addPointsInfoOnHeaders() {
+    let gruppespilsHeader = document.getElementById("gruppespilsHeader"); // 1 each
+    showPointsInfo(gruppespilsHeader,"1 point for hvert korrekt gæt");
+    
+    let ro16Header = document.getElementById("ro16Header"); //1 for each
+    showPointsInfo(ro16Header,"1 point for hvert rigtig gættet hold");
+    let ro8Header = document.getElementById("ro8Header"); //1 for each
+    showPointsInfo(ro8Header,"1 point for hvert rigtig gættet hold");
+    let semiHeader = document.getElementById("semiHeader"); //1 for each
+    showPointsInfo(semiHeader,"1 point for hvert rigtig gættet hold");
+    let finalsHeader = document.getElementById("finalsHeader"); //2 for each
+    showPointsInfo(finalsHeader,"2 point for hvert rigtig gættet hold");
+    let winnerHeader = document.getElementById("winnerHeader"); //1
+    showPointsInfo(winnerHeader,"1 point for at gætte vinderen");
+    
+    
+    let howFarDenmarkReachesHeader = document.getElementById("howFarDenmarkReachesHeader"); //2
+    showPointsInfo(howFarDenmarkReachesHeader,"2 point for at gætte hvor langt Danmark når");
+    let topGoalScorerHeader = document.getElementById("topGoalScorerHeader"); //2
+    showPointsInfo(topGoalScorerHeader,"2 point for at gætte topscoreren");
+    let daneToScoreHeader = document.getElementById("daneToScoreHeader"); //1
+    showPointsInfo(daneToScoreHeader,"1 point for at gætte en dansker der scorer");
+    //how many goals he scores is done in another function as this text is not always shown 
+    let playerToGetRedCardedHeader = document.getElementById("playerToGetRedCardedHeader"); //2
+    showPointsInfo(playerToGetRedCardedHeader,"2 point for at gætte en spiller der får rødt kort");
+    
+    
+
+}  
     
     
 function setup() {
@@ -668,5 +766,6 @@ function setup() {
     addMatches()
     addTeamTips()
     addExtraTips()
+    addPointsInfoOnHeaders()
     //if there is a saved state, load it
 }
