@@ -1,11 +1,11 @@
 
 //note:
+//fix save button
+//fix export button
+//also update the requirements for exporting (all must be filled out)
+
+//maybe add that when you select a team in the knockout stage, the teams in the group reference are colored green
 //add groups such that you can close all gruppekampe (as well as for the knockout stuff)
-    //fix save button
-    //fix export button
-        //also update the requirements for exporting (all must be filled out)
-    
-    //maybe add some reference where you can see all the groups and the teams in them
     
 class Match{
     constructor(homeTeam,awayTeam,group){
@@ -22,7 +22,20 @@ const scoreOptions = ["1","x","2","1x","x2","12","1x2"]
 const teams = getUniqueTeams()
 const randomMessages = ["","(Modigt!)", "(Er du nu HELT sikker på det?)", "(Ej kom nu, vi er da meget bedre end det!)", "(Interessant!)"];
 
-    
+function getTeamsInGroup(group) {
+    let teams = []
+    for (let match of matches) {
+        if (match.group === group) {
+            if (!teams.includes(match.homeTeam)) {
+                teams.push(match.homeTeam)
+            }
+            if (!teams.includes(match.awayTeam)) {
+                teams.push(match.awayTeam)
+            }
+        }
+    }
+    return teams;   
+}
 
 let sikreTips = 20
 let halvGarderinger = 10
@@ -111,7 +124,9 @@ function addButtons() {
     addExportButton()
 }
 
+//save it in local storage
 function save() {
+    
 }
 
 function exportTipskupon() {
@@ -272,7 +287,7 @@ function handleKnockoutSelectInput(currentSelect, teamsDiv) {
 
 
 
-function addRemainingTipsContainer() {
+function addRemainingTips() {
     // Create the overall container
     let remainingTipsContainer = document.createElement("div");
     remainingTipsContainer.style.position = "fixed";
@@ -280,6 +295,7 @@ function addRemainingTipsContainer() {
     remainingTipsContainer.style.right = "0";
     remainingTipsContainer.style.width = "20%";
     remainingTipsContainer.style.border = "2px solid black";
+    remainingTipsContainer.id = "remainingTipsContainer";
     
     //add text elements
     
@@ -331,11 +347,55 @@ function addRemainingTipsContainer() {
     helGarderingerDiv.appendChild(helGarderingerNumber);
     remainingTipsContainer.appendChild(helGarderingerDiv);
     
+
+    document.body.appendChild(remainingTipsContainer);
+}
+
+function addPointsInfo() {
+    let remainingTipsContainer = document.getElementById("remainingTipsContainer");
     let pointsInfo = document.createElement("p");
     pointsInfo.textContent = "Tip: Hold musen over overskrifterne for at se hvor mange point de giver";
     pointsInfo.style.fontWeight = 'bold';
     remainingTipsContainer.appendChild(pointsInfo);
-    document.body.appendChild(remainingTipsContainer);
+}
+
+function addGroupOverview() {
+    // Create the overall container
+    let groupOverviewContainer = document.createElement("div");
+    groupOverviewContainer.style.position = "fixed";
+    groupOverviewContainer.style.top = "0";
+    groupOverviewContainer.style.right = "0";
+    groupOverviewContainer.style.width = "40%";
+    groupOverviewContainer.style.border = "2px solid black";
+    groupOverviewContainer.style.marginTop = "300px"; // Adjust this value as needed
+
+    // Add some text for demonstration
+    let groupOverviewText = document.createElement("p");
+    groupOverviewText.textContent = "Grupper:";
+    groupOverviewContainer.appendChild(groupOverviewText);
+    const groups = ["Group A", "Group B", "Group C", "Group D", "Group E", "Group F"];
+    for (let group of groups) {
+        let groupDiv = document.createElement("div");
+        groupDiv.style.display = "flex";
+        let groupText = document.createElement("p");
+        groupText.textContent = group + ": ";
+        console.log(getTeamsInGroup(group))
+        for (let team of getTeamsInGroup(group)) {
+            groupText.textContent += team + ", ";
+        }
+        groupDiv.appendChild(groupText);
+        groupOverviewContainer.appendChild(groupDiv);    
+    }
+        
+
+    // Append the container to the body
+    document.body.appendChild(groupOverviewContainer);
+}
+
+function addReferenceContainer() {
+    addRemainingTips()
+    addPointsInfo()
+    addGroupOverview()
 }
 
 
@@ -762,10 +822,11 @@ function addPointsInfoOnHeaders() {
 function setup() {
     addNameField()
     addButtons()
-    addRemainingTipsContainer()
+    addReferenceContainer()
     addMatches()
     addTeamTips()
     addExtraTips()
     addPointsInfoOnHeaders()
     //if there is a saved state, load it
+
 }
