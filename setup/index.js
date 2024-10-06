@@ -4,8 +4,12 @@
 //fix export button
 //also update the requirements for exporting (all must be filled out)
 
+//howManyGoalsDaneScoresHeader should be in a line below
+
 //maybe add that when you select a team in the knockout stage, the teams in the group reference are colored green
 //add groups such that you can close all gruppekampe (as well as for the knockout stuff)
+
+
     
 class Match{
     constructor(homeTeam,awayTeam,group){
@@ -40,6 +44,10 @@ function getTeamsInGroup(group) {
 let sikreTips = 20
 let halvGarderinger = 10
 let helGarderinger = 6
+let numberOfTeamsInRo16 = 16;
+let numberOfTeamsInRo8 = 8;
+let numOfTeamsInSemiFinals = 4;
+let numOfTeamsInFinals = 2;
 
 let howFarDenmarkReachesResult = "";
 
@@ -106,6 +114,7 @@ function addSaveButton() {
     saveButton.style.position = "absolute";
     saveButton.style.top = "0";
     saveButton.style.left = "0";
+    saveButton.onclick = save;
     document.body.appendChild(saveButton); // Append the button to the body
 }
 
@@ -126,8 +135,119 @@ function addButtons() {
 
 //save it in local storage
 function save() {
+    //get all values
+    let nameValue = document.getElementById("nameField").value;
+    let matchValues = Array(matches.length).fill("");
+    for(let i = 0; i < matches.length; i++) {
+        let resultSelecter = document.getElementById("match"+i).querySelector('select');
+        let matchValue = resultSelecter.value;
+        if (matchValue !== "") {
+            matchValues[i] = matchValue;
+        }
+    /// save the matchValues
+    }
+    //1/8
+    let ro16Values = Array(numberOfTeamsInRo16).fill("");
+    for(let i = 0; i < numberOfTeamsInRo16; i++) {
+        let resultSelecter = document.getElementById("ro16Div").querySelectorAll('select')[i];
+        let ro16Value = resultSelecter.value;
+        if (ro16Value !== "") {
+            ro16Values[i] = ro16Value;
+        }
+    }
+    //kvart
+    let ro8Values = Array(numberOfTeamsInRo8).fill("");
+    for(let i = 0; i < numberOfTeamsInRo8; i++) {
+        let resultSelecter = document.getElementById("ro8Div").querySelectorAll('select')[i];
+        let ro8Value = resultSelecter.value;
+        if (ro8Value !== "") {
+            ro8Values[i] = ro8Value;
+        }
+    }
+    //semi
+    let semiValues = Array(numOfTeamsInSemiFinals).fill("");
+    for(let i = 0; i < numOfTeamsInSemiFinals; i++) {
+        let resultSelecter = document.getElementById("semiDiv").querySelectorAll('select')[i];
+        let semiValue = resultSelecter.value;
+        if (semiValue !== "") {
+            semiValues[i] = semiValue;
+        }
+    }
+    //finale
+    let finaleValues = Array(numOfTeamsInFinals).fill("");
+    for(let i = 0; i < numOfTeamsInFinals; i++) {
+        let resultSelecter = document.getElementById("finalsDiv").querySelectorAll('select')[i];
+        let finaleValue = resultSelecter.value;
+        if (finaleValue !== "") {
+            finaleValues[i] = finaleValue;
+        }
+    }
+    //vinder
+    let winnerValue = document.getElementById("winnerDiv").querySelector('select').value
+    if (winnerValue === "") {
+        winnerValue = null;
+    }
+        
+    //top goal scorer
+    let topGoalScorerValue = document.getElementById("topGoalScorerDiv").querySelector('input').value;
+    if (topGoalScorerValue === "") {
+        topGoalScorerValue = null;
+    }
+    let daneToScoreValue = document.getElementById("daneScoringDiv").querySelector('input').value;
+    let howManyGoalsDaneScoresValue = null;
+    if (daneToScoreValue === "") {
+        daneToScoreValue = null;
+    }
+    else {
+        howManyGoalsDaneScoresValue = document.getElementById("howManyGoalsDaneScoresInput").value;
+        if (howManyGoalsDaneScoresValue === "") {
+            howManyGoalsDaneScoresValue = null;
+        }
+    }
+    
+    let playerToGetRedCardedValue = document.getElementById("playerToGetRedCardedDiv").querySelector('input').value;
+    if (playerToGetRedCardedValue === "") {
+        playerToGetRedCardedValue = null;
+    }
+    console.log("Name Value: ", nameValue);
+    console.log("Match Values: ", matchValues);
+    console.log("Ro16 Values: ", ro16Values);
+    console.log("Ro8 Values: ", ro8Values);
+    console.log("Semi Values: ", semiValues);
+    console.log("Finale Values: ", finaleValues);
+    console.log("Winner Value: ", winnerValue);
+    console.log("Top Goal Scorer Value: ", topGoalScorerValue);
+    console.log("Dane To Score Value: ", daneToScoreValue);
+    console.log("How Many Goals Dane Scores Value: ", howManyGoalsDaneScoresValue);
+    console.log("Red Carded Value: ", playerToGetRedCardedValue);
+    
+    
+    
+    //update existing local storage values (or create new ones)
+    localStorage.setItem('slutrundeYear', 2024);
+    localStorage.setItem('nameValue', nameValue);
+    localStorage.setItem('matchValues', JSON.stringify(matchValues));
+    localStorage.setItem('ro16Values', JSON.stringify(ro16Values));
+    localStorage.setItem('ro8Values', JSON.stringify(ro8Values));
+    localStorage.setItem('semiValues', JSON.stringify(semiValues));
+    localStorage.setItem('finaleValues', JSON.stringify(finaleValues));
+    localStorage.setItem('winnerValue', winnerValue);
+    localStorage.setItem('topGoalScorerValue', topGoalScorerValue);
+    localStorage.setItem('daneToScoreValue', daneToScoreValue);
+    localStorage.setItem('howManyGoalsDaneScoresValue', howManyGoalsDaneScoresValue);
+    localStorage.setItem('playerToGetRedCardedValue', playerToGetRedCardedValue);
+    
+    //add toast message
+    showToast("Din tipskupon er gemt succesfuldt!");
+    
     
 }
+
+//load from local storage
+function load() {
+    //use JSON.parse() to convert the string back to an array   
+}
+
 
 function exportTipskupon() {
     let nameField = document.getElementById("nameField");
@@ -187,7 +307,6 @@ function updateRemainingTips(prevValue, currentValue) {
     let tipDictionary = {[sikreTips]: sikreTipsNumber, [halvGarderinger]: halvGarderingerNumber, [helGarderinger]: helGarderingerNumber};
     
     for (let [tipType, tipTypeObject] of Object.entries(tipDictionary)) {
-        console.log(tipType)
         if (tipType == 0) {
             tipTypeObject.style.color = "green";
         } 
@@ -274,8 +393,6 @@ function handleKnockoutSelectInput(currentSelect, teamsDiv) {
         
     elem = document.getElementById("howFarDenmarkReachesResultElement");
     //if the results has not changed then dont update the text (also avoid the random messages)
-    console.log("1: ", elem.textContent)
-    console.log("2: ",howFarDenmarkReachesResult)
     if (howFarDenmarkReachesResultBackup === howFarDenmarkReachesResult)
         return;
     elem.textContent = howFarDenmarkReachesResult;
@@ -379,7 +496,6 @@ function addGroupOverview() {
         groupDiv.style.display = "flex";
         let groupText = document.createElement("p");
         groupText.textContent = group + ": ";
-        console.log(getTeamsInGroup(group))
         for (let team of getTeamsInGroup(group)) {
             groupText.textContent += team + ", ";
         }
@@ -458,6 +574,7 @@ function addTeamTips() {
     let outerDiv = document.createElement("div");
     outerDiv.style.display = "flex";
     outerDiv.style.flexDirection = "column";
+    outerDiv.style.width = "50%";
     // outerDiv.style.alignItems = "center";
     // outerDiv.style.justifyContent = "center";
     document.body.appendChild(outerDiv);
@@ -469,7 +586,7 @@ function addTeamTips() {
     ro16Header.textContent = "Hold i ottendedelsfinalerne";
     ro16Header.id = "ro16Header";
     ro16Div.appendChild(ro16Header);
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < numberOfTeamsInRo16; i++) {
         let ro16MatchSelect = document.createElement("select");
         ro16MatchSelect.type = "text";
         //add placeholder text and no selected option by default
@@ -495,7 +612,7 @@ function addTeamTips() {
     ro8Header.id = "ro8Header";
     ro8Header.textContent = "Hold i kvartfinalerne";
     ro8Div.appendChild(ro8Header);
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < numberOfTeamsInRo8; i++) {
         let ro8MatchSelect = document.createElement("select");
         ro8MatchSelect.type = "text";
         //add placeholder text and no selected option by default
@@ -522,7 +639,7 @@ function addTeamTips() {
     semiHeader.textContent = "Hold i semifinalerne";
     semiHeader.id = "semiHeader";
     semiDiv.appendChild(semiHeader);
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < numOfTeamsInSemiFinals; i++) {
         let semiMatchSelect = document.createElement("select");
         semiMatchSelect.type = "text";
         //add placeholder text and no selected option by default
@@ -549,7 +666,7 @@ function addTeamTips() {
     finalsHeader.textContent = "Hold i finalen";
     finalsHeader.id = "finalsHeader";
     finalsDiv.appendChild(finalsHeader);
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < numOfTeamsInFinals; i++) {
         let finalsMatchSelect = document.createElement("select");
         finalsMatchSelect.type = "text";
         //add placeholder text and no selected option by default
@@ -638,6 +755,7 @@ function addTopGoalScorer() {
     let topGoalScorerDiv = document.createElement("div");
     topGoalScorerDiv.style.display = "flex";
     topGoalScorerDiv.style.alignItems = 'center';
+    topGoalScorerDiv.id = "topGoalScorerDiv";
     let topGoalScorerHeader = document.createElement("h2");
     topGoalScorerHeader.textContent = "Topscorer: ";
     topGoalScorerHeader.style.display = 'inline-block';
@@ -729,6 +847,7 @@ function addPlayerToGetARedCard() {
     let playerToGetRedCardedDiv = document.createElement("div");
     playerToGetRedCardedDiv.style.display = "flex";
     playerToGetRedCardedDiv.style.alignItems = 'center';
+    playerToGetRedCardedDiv.id = "playerToGetRedCardedDiv";
     let playerToGetRedCardedHeader = document.createElement("h2");
     playerToGetRedCardedHeader.textContent = "Spiller der får rødt kort: ";
     playerToGetRedCardedHeader.style.display = 'inline-block';
@@ -828,5 +947,5 @@ function setup() {
     addExtraTips()
     addPointsInfoOnHeaders()
     //if there is a saved state, load it
-
+    load()
 }
