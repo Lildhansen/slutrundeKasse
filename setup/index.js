@@ -48,9 +48,11 @@ let numberOfTeamsInRo16 = 16;
 let numberOfTeamsInRo8 = 8;
 let numOfTeamsInSemiFinals = 4;
 let numOfTeamsInFinals = 2;
+let currentSlutRundeYear = 2024;
 
 let howFarDenmarkReachesResult = "";
 
+//util stuff:
 function getUniqueTeams() {
     uniqueMatches = []
     for (let match of matches) {
@@ -63,6 +65,7 @@ function getUniqueTeams() {
     }
     return uniqueMatches
 }
+
 
 //they dont really stack well - if more should be added at the same time maybe look into this
 function showToast(message) {
@@ -96,6 +99,45 @@ function showToast(message) {
         document.body.removeChild(toast);
     }, 3500);
 }
+
+function updateHowFarDenmarkReaches() {
+    let howFarDenmarkReachesResultBackup = howFarDenmarkReachesResult;
+    let ro16Div = document.getElementById("ro16Div");
+    let ro8Div = document.getElementById("ro8Div");
+    let semiDiv = document.getElementById("semiDiv");
+    let finalsDiv = document.getElementById("finalsDiv");
+
+    let denmarkIsInRo8 = Array.from(ro8Div.querySelectorAll('select')).some(select => select.value === "Denmark");
+    let denmarkIsInSemi = Array.from(semiDiv.querySelectorAll('select')).some(select => select.value === "Denmark");
+    let denmarkIsInFinals = Array.from(finalsDiv.querySelectorAll('select')).some(select => select.value === "Denmark");
+    let denmarkIsInRo16 = Array.from(ro16Div.querySelectorAll('select')).some(select => select.value === "Denmark");
+    if (denmarkIsInRo8 || denmarkIsInSemi || denmarkIsInFinals) {
+        howFarDenmarkReachesResult = "Mindst en kvartfinale";
+    }
+    else if (denmarkIsInRo16) {
+        howFarDenmarkReachesResult = "ud i ottendedelsfinalerne";
+    }
+    else {
+        howFarDenmarkReachesResult = "Ud i gruppespillet";
+    } 
+    
+    if (Array.from(ro16Div.querySelectorAll('select')).every(select => select.value !== "") 
+        && !Array.from(ro16Div.querySelectorAll('select')).some(select => select.value === "Denmark")) {
+        howFarDenmarkReachesResult = "Ud i grupperspillet";
+    }
+        
+    elem = document.getElementById("howFarDenmarkReachesResultElement");
+    //if the results has not changed then dont update the text (also avoid the random messages)
+    if (howFarDenmarkReachesResultBackup === howFarDenmarkReachesResult)
+        return;
+    elem.textContent = howFarDenmarkReachesResult;
+      
+    randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
+    elem.textContent += randomMessage;
+}
+
+
+//adding stuff
 
 function addNameField() {
     let nameField = document.createElement("input");
@@ -184,31 +226,18 @@ function save() {
     }
     //vinder
     let winnerValue = document.getElementById("winnerDiv").querySelector('select').value
-    if (winnerValue === "") {
-        winnerValue = null;
-    }
+    
         
     //top goal scorer
     let topGoalScorerValue = document.getElementById("topGoalScorerDiv").querySelector('input').value;
-    if (topGoalScorerValue === "") {
-        topGoalScorerValue = null;
-    }
+    
     let daneToScoreValue = document.getElementById("daneScoringDiv").querySelector('input').value;
     let howManyGoalsDaneScoresValue = null;
-    if (daneToScoreValue === "") {
-        daneToScoreValue = null;
-    }
-    else {
+    if (daneToScoreValue !== "") {
         howManyGoalsDaneScoresValue = document.getElementById("howManyGoalsDaneScoresInput").value;
-        if (howManyGoalsDaneScoresValue === "") {
-            howManyGoalsDaneScoresValue = null;
-        }
     }
     
     let playerToGetRedCardedValue = document.getElementById("playerToGetRedCardedDiv").querySelector('input').value;
-    if (playerToGetRedCardedValue === "") {
-        playerToGetRedCardedValue = null;
-    }
     console.log("Name Value: ", nameValue);
     console.log("Match Values: ", matchValues);
     console.log("Ro16 Values: ", ro16Values);
@@ -224,7 +253,7 @@ function save() {
     
     
     //update existing local storage values (or create new ones)
-    localStorage.setItem('slutrundeYear', 2024);
+    localStorage.setItem('slutrundeYear', currentSlutRundeYear);
     localStorage.setItem('nameValue', nameValue);
     localStorage.setItem('matchValues', JSON.stringify(matchValues));
     localStorage.setItem('ro16Values', JSON.stringify(ro16Values));
@@ -245,7 +274,85 @@ function save() {
 
 //load from local storage
 function load() {
-    //use JSON.parse() to convert the string back to an array   
+    // Get items from local storage
+    let slutrundeYear = localStorage.getItem('slutrundeYear');
+    let nameValue = localStorage.getItem('nameValue');
+    let matchValues = JSON.parse(localStorage.getItem('matchValues'));
+    let ro16Values = JSON.parse(localStorage.getItem('ro16Values'));
+    let ro8Values = JSON.parse(localStorage.getItem('ro8Values'));
+    let semiValues = JSON.parse(localStorage.getItem('semiValues'));
+    let finaleValues = JSON.parse(localStorage.getItem('finaleValues'));
+    let winnerValue = localStorage.getItem('winnerValue');
+    let topGoalScorerValue = localStorage.getItem('topGoalScorerValue');
+    let daneToScoreValue = localStorage.getItem('daneToScoreValue');
+    let howManyGoalsDaneScoresValue = localStorage.getItem('howManyGoalsDaneScoresValue');
+    let playerToGetRedCardedValue = localStorage.getItem('playerToGetRedCardedValue');
+    
+    //if we are loading from a previous year, dont load anything
+    //note the != since either may be string or int
+    if (slutrundeYear != currentSlutRundeYear)
+        return
+    //name
+    if (nameValue !== "")
+        document.getElementById("nameField").value = nameValue;
+    //matches
+    for (let i = 0; i < matchValues.length; i++) {
+        if (matchValues[i] !== "") {
+            document.getElementById("match"+i).querySelector('select').value = matchValues[i];
+        }
+    }
+    //ro16
+    for (let i = 0; i < ro16Values.length; i++) {
+        if (ro16Values[i] !== "") {
+            document.getElementById("ro16Div").querySelectorAll('select')[i].value = ro16Values[i];
+        }
+    }
+    //ro8
+    for (let i = 0; i < ro8Values.length; i++) {
+        if (ro8Values[i] !== "") {
+            document.getElementById("ro8Div").querySelectorAll('select')[i].value = ro8Values[i];
+        }
+    }
+    //semi
+    for (let i = 0; i < semiValues.length; i++) {
+        if (semiValues[i] !== "") {
+            document.getElementById("semiDiv").querySelectorAll('select')[i].value = semiValues[i];
+        }
+    }
+    //finale
+    for (let i = 0; i < finaleValues.length; i++) {
+        if (finaleValues[i] !== "") {
+            document.getElementById("finalsDiv").querySelectorAll('select')[i].value = finaleValues[i];
+        }
+    }
+    //winner
+    if (winnerValue !== "")
+        document.getElementById("winnerDiv").querySelector('select').value = winnerValue;
+        
+    //top scorer
+    if (topGoalScorerValue !== "")
+        document.getElementById("topGoalScorerDiv").querySelector('input').value = topGoalScorerValue;
+        
+    //how far denmark reaches ???
+    if (ro8Values.some(value => value === "Denmark") || semiValues.some(value => value === "Denmark") || finaleValues.some(value => value === "Denmark"))
+        updateHowFarDenmarkReaches();
+    
+    //dane to score + how many goals dane scores
+    if (daneToScoreValue !== "") {
+        document.getElementById("daneScoringDiv").querySelector('input').value = daneToScoreValue;
+        addHowManyGoalsByPickedDane()
+        if (howManyGoalsDaneScoresValue !== "")
+            document.getElementById("howManyGoalsDaneScoresInput").value = howManyGoalsDaneScoresValue;
+    }
+    //player to get red carded
+    if (playerToGetRedCardedValue !== "")
+        document.getElementById("playerToGetRedCardedDiv").querySelector('input').value = playerToGetRedCardedValue;
+        
+        
+
+    //mangler at opdatere de eksluderede hold i knockout fasen (pt kan man vælge tyskland og så gemme og så når man loader kan man vælge tyskland igen)
+    //mangler at opdatere de resterende tips
+    //måske bare lav en funktion der opdaterer disse ting og så kald dem i de her cases, og de eksisterende cases
 }
 
 
@@ -349,56 +456,11 @@ function handleKnockoutSelectInput(currentSelect, teamsDiv) {
             }
         }
     }
-    let howFarDenmarkReachesResultBackup = howFarDenmarkReachesResult;
-    //check if denmark was added:
+    //check if denmark was added/removed:
     let prevValue = currentSelect.getAttribute('data-prev-value');
-    if (currentSelect.value === "Denmark") {
-        if (currentSelect.parentNode.id == "ro8Div" || currentSelect.parentNode.id == "semiDiv" || currentSelect.parentNode.id == "finalsDiv") {
-            howFarDenmarkReachesResult = "Mindst en kvartfinale";
-        }
-        else if (currentSelect.parentNode.id == "ro16Div") {
-            howFarDenmarkReachesResult = "Mindst en ottendedelsfinale";
-        }
-        else {
-            howFarDenmarkReachesResult = "Ud i gruppespillet";
-        }
+    if (currentSelect.value === "Denmark" || prevValue === "Denmark") {
+        updateHowFarDenmarkReaches();
     }
-    
-    //check if denmark was removed ():
-    else if (prevValue === "Denmark") {
-        let ro16Div = document.getElementById("ro16Div");
-        let ro8Div = document.getElementById("ro8Div");
-        let semiDiv = document.getElementById("semiDiv");
-        let finalsDiv = document.getElementById("finalsDiv");
-
-        let denmarkIsInRo8 = Array.from(ro8Div.querySelectorAll('select')).some(select => select.value === "Denmark");
-        let denmarkIsInSemi = Array.from(semiDiv.querySelectorAll('select')).some(select => select.value === "Denmark");
-        let denmarkIsInFinals = Array.from(finalsDiv.querySelectorAll('select')).some(select => select.value === "Denmark");
-        let denmarkIsInRo16 = Array.from(ro16Div.querySelectorAll('select')).some(select => select.value === "Denmark");
-        if (denmarkIsInRo8 || denmarkIsInSemi || denmarkIsInFinals) {
-            howFarDenmarkReachesResult = "Mindst en kvartfinale";
-        }
-        else if (denmarkIsInRo16) {
-            howFarDenmarkReachesResult = "Mindst en ottendedelsfinale";
-        }
-        else {
-            howFarDenmarkReachesResult = "Ud i gruppespillet";
-        } 
-    }
-    //if all ottendelsfinaler teams have been added (and denmark has not been select), fill out the how far denmark reaches
-    if (Array.from(ro16Div.querySelectorAll('select')).every(select => select.value !== "") 
-        && !Array.from(ro16Div.querySelectorAll('select')).some(select => select.value === "Denmark")) {
-        howFarDenmarkReachesResult = "Ud i grupperspillet";
-    }
-        
-    elem = document.getElementById("howFarDenmarkReachesResultElement");
-    //if the results has not changed then dont update the text (also avoid the random messages)
-    if (howFarDenmarkReachesResultBackup === howFarDenmarkReachesResult)
-        return;
-    elem.textContent = howFarDenmarkReachesResult;
-      
-    randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
-    elem.textContent += randomMessage;
 }
 
 
@@ -947,5 +1009,6 @@ function setup() {
     addExtraTips()
     addPointsInfoOnHeaders()
     //if there is a saved state, load it
+    
     load()
 }
