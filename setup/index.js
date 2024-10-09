@@ -1,6 +1,5 @@
 
 //note:
-//fix save button
 //fix export button
 //also update the requirements for exporting (all must be filled out)
 
@@ -135,6 +134,8 @@ function updateHowFarDenmarkReaches() {
     randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
     elem.textContent += randomMessage;
 }
+
+
 
 
 //adding stuff
@@ -272,6 +273,51 @@ function save() {
     
 }
 
+function updateAvailableTeamsOnLoad() {
+    let teamTipsContainer = document.getElementById("teamTipsContainer");
+    let selectedTeams = [];
+    for (let select of teamTipsContainer.querySelectorAll('select')) {
+        if (select.value !== "" && !selectedTeams.includes(select.value)) {
+            selectedTeams.push(select.value);
+        }
+    }
+    for (let select of teamTipsContainer.querySelectorAll('select')) {
+        for (let option of select.options) {
+            if (selectedTeams.includes(option.value)) {
+                option.disabled = true;
+            }
+        }
+    }
+    
+}
+
+function updateRemainingTipsOnLoad() {
+    let matchesContainer = document.getElementById("matchesContainer");
+    let sikreTipsValue = parseInt(document.getElementById("sikreTipsNumber").innerHTML);
+    let halvGarderingerValue = parseInt(document.getElementById("halvGarderingerNumber").innerHTML);
+    let helGarderingerValue = parseInt(document.getElementById("helGarderingerNumber").innerHTML);
+    
+    for (let match of matchesContainer.querySelectorAll('select')) {
+        if (match.value !== "") {
+            if (match.value === "1" || match.value === "x" || match.value === "2") {
+                sikreTipsValue -= 1;
+            }
+            else if (match.value === "1x" || match.value === "x2") {
+                halvGarderingerValue -= 1;
+            }
+            else if (match.value === "1x2") {
+                helGarderingerValue -= 1;
+            }
+        }
+    }
+    
+    document.getElementById("sikreTipsNumber").textContent = sikreTipsValue;
+    document.getElementById("halvGarderingerNumber").textContent = halvGarderingerValue;
+    document.getElementById("helGarderingerNumber").textContent = helGarderingerValue;
+    
+}
+
+
 //load from local storage
 function load() {
     // Get items from local storage
@@ -349,10 +395,8 @@ function load() {
         document.getElementById("playerToGetRedCardedDiv").querySelector('input').value = playerToGetRedCardedValue;
         
         
-
-    //mangler at opdatere de eksluderede hold i knockout fasen (pt kan man vælge tyskland og så gemme og så når man loader kan man vælge tyskland igen)
-    //mangler at opdatere de resterende tips
-    //måske bare lav en funktion der opdaterer disse ting og så kald dem i de her cases, og de eksisterende cases
+    updateRemainingTipsOnLoad();
+    updateAvailableTeamsOnLoad();    
 }
 
 
@@ -637,6 +681,7 @@ function addTeamTips() {
     outerDiv.style.display = "flex";
     outerDiv.style.flexDirection = "column";
     outerDiv.style.width = "50%";
+    outerDiv.id = "teamTipsContainer";
     // outerDiv.style.alignItems = "center";
     // outerDiv.style.justifyContent = "center";
     document.body.appendChild(outerDiv);
@@ -1008,7 +1053,6 @@ function setup() {
     addTeamTips()
     addExtraTips()
     addPointsInfoOnHeaders()
-    //if there is a saved state, load it
     
     load()
 }
