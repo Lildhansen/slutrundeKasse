@@ -3,8 +3,13 @@
 //fix export button
 //also update the requirements for exporting (all must be filled out)
 
-//howManyGoalsDaneScoresHeader should be in a line below
+//bugs:
+    //valg af tips kan føre til at det ikke går op (kan fixes ved at gemme og reloade but still)
+        //maybe related: prevValue er ikke sat hvis man loader siden (så er prevvalue tom selvom der er en value når man skifter)
+    //tallene fucker op hvis man loader og så forsøger igen (aka der skal ikke assumes at man har fuld tips fra starten)
+    
 
+//extra stuff - nice-to-haves
 //maybe add that when you select a team in the knockout stage, the teams in the group reference are colored green
 //add groups such that you can close all gruppekampe (as well as for the knockout stuff)
 
@@ -420,7 +425,13 @@ function exportTipskupon() {
 }
 
 function updateRemainingTips(prevValue, currentValue) {
-    if (prevValue !== "")
+    sikreTips = parseInt(document.getElementById("sikreTipsNumber").textContent);
+    halvGarderinger = parseInt(document.getElementById("halvGarderingerNumber").textContent);
+    helGarderinger = parseInt(document.getElementById("helGarderingerNumber").textContent);
+    let sikreTipsNumber = document.getElementById("sikreTipsNumber");
+    let halvGarderingerNumber = document.getElementById("halvGarderingerNumber");
+    let helGarderingerNumber = document.getElementById("helGarderingerNumber");
+    // if (prevValue !== "")
     switch (prevValue) {
         case "1":
         case "x":
@@ -435,6 +446,7 @@ function updateRemainingTips(prevValue, currentValue) {
             helGarderinger += 1;
             break;
     }
+    
     switch (currentValue) {
         case "1":
         case "x":
@@ -450,9 +462,6 @@ function updateRemainingTips(prevValue, currentValue) {
             break;
     }
     
-    let sikreTipsNumber = document.getElementById("sikreTipsNumber");
-    let halvGarderingerNumber = document.getElementById("halvGarderingerNumber");
-    let helGarderingerNumber = document.getElementById("helGarderingerNumber");
     
     //handle number coloring
     let tipDictionary = {[sikreTips]: sikreTipsNumber, [halvGarderinger]: halvGarderingerNumber, [helGarderinger]: helGarderingerNumber};
@@ -904,8 +913,10 @@ function addHowManyGoalsByPickedDane() {
 function addDaneToScore() {
     let daneScoringDiv = document.createElement("div");
     daneScoringDiv.id = "daneScoringDiv";
-    daneScoringDiv.style.display = "flex";
+    daneScoringDiv.style.display = "block";
     daneScoringDiv.style.alignItems = 'center';
+    let daneToScoreHeaderDiv = document.createElement("div");
+    daneToScoreHeaderDiv.style.width = "100%";
     let daneToScoreHeader = document.createElement("h2");
     daneToScoreHeader.textContent = "Dansker der scorer:";
     daneToScoreHeader.id = "daneToScoreHeader";
@@ -917,14 +928,17 @@ function addDaneToScore() {
     daneToScoreInput.style.height = "30px";
     daneToScoreInput.onblur = addHowManyGoalsByPickedDane;
     
-    daneScoringDiv.appendChild(daneToScoreHeader);
-    daneScoringDiv.appendChild(daneToScoreInput);
+    daneToScoreHeaderDiv.appendChild(daneToScoreHeader);
+    daneToScoreHeaderDiv.appendChild(daneToScoreInput);
+    daneScoringDiv.appendChild(daneToScoreHeaderDiv);
     
     //add how many goals that dane scores
     let daneScoringValue = daneToScoreInput.value;
+    let howManyGoalsDaneScoresHeaderDiv = document.createElement("div");
+    howManyGoalsDaneScoresHeaderDiv.style.width = "100%";
     let howManyGoalsDaneScoresHeader = document.createElement("h2");
     howManyGoalsDaneScoresHeader.textContent = `... og hvor mange mål scorer ${daneScoringValue}:`;
-    howManyGoalsDaneScoresHeader.style.display = 'inline-block';
+    howManyGoalsDaneScoresHeader.style.display = 'block';
     howManyGoalsDaneScoresHeader.style.marginRight = '10px';
     howManyGoalsDaneScoresHeader.style.marginLeft = '10px';
     howManyGoalsDaneScoresHeader.id = "howManyGoalsDaneScoresHeader";
@@ -941,9 +955,10 @@ function addDaneToScore() {
     howManyGoalsDaneScoresInput.style.height = "30px";
     howManyGoalsDaneScoresInput.id = "howManyGoalsDaneScoresInput";
     howManyGoalsDaneScoresInput.style.display = 'none';
-    daneScoringDiv.appendChild(howManyGoalsDaneScoresHeader);
-    daneScoringDiv.appendChild(howManyGoalsDaneScoresInput);
-   
+    
+    howManyGoalsDaneScoresHeaderDiv.appendChild(howManyGoalsDaneScoresHeader);
+    howManyGoalsDaneScoresHeaderDiv.appendChild(howManyGoalsDaneScoresInput);
+    daneScoringDiv.appendChild(howManyGoalsDaneScoresHeaderDiv);
     
     
     
