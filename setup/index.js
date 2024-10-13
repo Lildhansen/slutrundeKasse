@@ -4,10 +4,6 @@
 //also update the requirements for exporting (all must be filled out)
 
 //bugs:
-    //valg af tips kan føre til at det ikke går op (kan fixes ved at gemme og reloade but still)
-        //maybe related: prevValue er ikke sat hvis man loader siden (så er prevvalue tom selvom der er en value når man skifter)
-    //tallene fucker op hvis man loader og så forsøger igen (aka der skal ikke assumes at man har fuld tips fra starten)
-    
 
 //extra stuff - nice-to-haves
 //maybe add that when you select a team in the knockout stage, the teams in the group reference are colored green
@@ -316,10 +312,12 @@ function updateRemainingTipsOnLoad() {
         }
     }
     
+    
     document.getElementById("sikreTipsNumber").textContent = sikreTipsValue;
     document.getElementById("halvGarderingerNumber").textContent = halvGarderingerValue;
     document.getElementById("helGarderingerNumber").textContent = helGarderingerValue;
     
+    handleNumberColoring();
 }
 
 
@@ -401,7 +399,7 @@ function load() {
         
         
     updateRemainingTipsOnLoad();
-    updateAvailableTeamsOnLoad();    
+    updateAvailableTeamsOnLoad(); 
 }
 
 
@@ -466,23 +464,41 @@ function updateRemainingTips(prevValue, currentValue) {
     //handle number coloring
     let tipDictionary = {[sikreTips]: sikreTipsNumber, [halvGarderinger]: halvGarderingerNumber, [helGarderinger]: helGarderingerNumber};
     
-    for (let [tipType, tipTypeObject] of Object.entries(tipDictionary)) {
-        if (tipType == 0) {
-            tipTypeObject.style.color = "green";
-        } 
-        else if (tipType < 0) {
-            tipTypeObject.style.color = "red";
-        }
-        else {
-            tipTypeObject.style.color = "black";
-        }
-    }
+    
     
     
     //update the numbers
     sikreTipsNumber.textContent = sikreTips;
     halvGarderingerNumber.textContent = halvGarderinger;
     helGarderingerNumber.textContent = helGarderinger;   
+    handleNumberColoring();
+}
+
+function handleNumberColoring() {
+    sikreTips = parseInt(document.getElementById("sikreTipsNumber").textContent);
+    halvGarderinger = parseInt(document.getElementById("halvGarderingerNumber").textContent);
+    helGarderinger = parseInt(document.getElementById("helGarderingerNumber").textContent);
+    let sikreTipsElement = document.getElementById("sikreTipsNumber");
+    let halvGarderingerElement = document.getElementById("halvGarderingerNumber");
+    let helGarderingerElement = document.getElementById("helGarderingerNumber");
+    
+    let tipMap = new Map();
+    tipMap.set(sikreTipsElement, sikreTips);
+    tipMap.set(halvGarderingerElement, halvGarderinger);
+    tipMap.set(helGarderingerElement, helGarderinger);
+
+    for (let [tipTypeObject, numOfTips] of tipMap) {
+        console.log("tipType: ", numOfTips);
+        if (numOfTips == 0) {
+            tipTypeObject.style.color = "green";
+        } 
+        else if (numOfTips < 0) {
+            tipTypeObject.style.color = "red";
+        }
+        else {
+            tipTypeObject.style.color = "black";
+        }
+    }
 }
 
 //den skal også håndtere at frigive hvis man vælger et andet holdt (altså bruge prev value)
@@ -668,9 +684,17 @@ function addMatches() {
         resultSelecter.add(defaultOption);
         //keep track of previous value
         resultSelecter.setAttribute('data-prev-value', resultSelecter.value);
+        //if their was a previous save, the prevvalue must be updated
+        resultSelecter.onclick = function() {
+            if (this.value !== "" && this.getAttribute('data-prev-value') === "") {
+                this.setAttribute('data-prev-value', this.value);
+            }
+        };
         //pass in the previous value and the current value when the value changes
         resultSelecter.onchange = function() {
+            console.log("this: ", this.value);
             let prevValue = this.getAttribute('data-prev-value'); // Get the previous value
+            console.log("prevValue: ", prevValue);
             let currentValue = this.value; // Get the current value
             
             // Update the previous value attribute
