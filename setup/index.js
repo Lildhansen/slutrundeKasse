@@ -6,7 +6,6 @@
 //bugs:
 
 //extra stuff - nice-to-haves
-//maybe add that when you select a team in the knockout stage, the teams in the group reference are colored green
 //add groups such that you can close all gruppekampe (as well as for the knockout stuff)
 
 
@@ -132,7 +131,7 @@ function updateHowFarDenmarkReaches() {
         return;
     elem.textContent = howFarDenmarkReachesResult;
       
-    randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
+    let randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
     elem.textContent += randomMessage;
 }
 
@@ -400,6 +399,7 @@ function load() {
         
     updateRemainingTipsOnLoad();
     updateAvailableTeamsOnLoad(); 
+    handleTeamColoring();
 }
 
 
@@ -500,6 +500,34 @@ function handleNumberColoring() {
         }
     }
 }
+
+function handleTeamColoring() {
+    let teamsPicked = [];
+    let teamsDiv = document.getElementById("teamTipsContainer");
+    for (let select of teamsDiv.querySelectorAll('select')) {
+        if (select.value !== "" && !teamsPicked.includes(select.value)) {
+            teamsPicked.push(select.value);
+        }
+    }
+    
+    for (let groupDiv of groupOverviewContainer.querySelectorAll('div')) {
+        for (let groupSpan of groupDiv.querySelectorAll('span')) {
+            if (teamsPicked.includes(groupSpan.textContent)) {
+                groupSpan.style.color = "green";
+            }
+            else {
+                groupSpan.style.color = "black";
+            }
+        }
+    }
+    
+    
+    
+    
+    
+}
+
+
 
 //den skal også håndtere at frigive hvis man vælger et andet holdt (altså bruge prev value)
 function handleKnockoutSelectInput(currentSelect, teamsDiv) {
@@ -610,6 +638,7 @@ function addPointsInfo() {
 function addGroupOverview() {
     // Create the overall container
     let groupOverviewContainer = document.createElement("div");
+    groupOverviewContainer.id = "groupOverviewContainer";
     groupOverviewContainer.style.position = "fixed";
     groupOverviewContainer.style.top = "0";
     groupOverviewContainer.style.right = "0";
@@ -627,11 +656,17 @@ function addGroupOverview() {
         groupDiv.style.display = "flex";
         let groupText = document.createElement("p");
         groupText.textContent = group + ": ";
-        for (let team of getTeamsInGroup(group)) {
-            groupText.textContent += team + ", ";
+        let teams = getTeamsInGroup(group);
+        for (let i = 0; i < teams.length; i++) {
+            let teamSpan = document.createElement("span");
+            teamSpan.textContent = teams[i];
+            groupText.appendChild(teamSpan);
+            if (i < teams.length - 1) {
+                groupText.appendChild(document.createTextNode(", "));
+            }
         }
         groupDiv.appendChild(groupText);
-        groupOverviewContainer.appendChild(groupDiv);    
+        groupOverviewContainer.appendChild(groupDiv);
     }
         
 
@@ -740,6 +775,7 @@ function addTeamTips() {
             ro16MatchSelect.onchange = function() {
                 handleKnockoutSelectInput(this, ro16Div);
                 this.setAttribute('data-prev-value', this.value);
+                handleTeamColoring();
             };
         }
         ro16Div.appendChild(ro16MatchSelect);
@@ -766,6 +802,7 @@ function addTeamTips() {
             ro8MatchSelect.onchange = function() {
                 handleKnockoutSelectInput(this, ro8Div);
                 this.setAttribute('data-prev-value', this.value);
+                handleTeamColoring();
             }
             ro8Div.appendChild(ro8MatchSelect);
         }
@@ -793,6 +830,7 @@ function addTeamTips() {
             semiMatchSelect.onchange = function() {
                 handleKnockoutSelectInput(this, semiDiv);
                 this.setAttribute('data-prev-value', this.value);
+                handleTeamColoring();
             };
         }
         semiDiv.appendChild(semiMatchSelect);
@@ -820,6 +858,7 @@ function addTeamTips() {
             finalsMatchSelect.onchange = function() {
                 handleKnockoutSelectInput(this, finalsDiv);
                 this.setAttribute('data-prev-value', this.value);
+                handleTeamColoring();
             }
         }
         finalsDiv.appendChild(finalsMatchSelect);
