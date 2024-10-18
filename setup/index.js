@@ -146,34 +146,42 @@ function addNameField() {
     nameField.id = "nameField";
     nameField.placeholder = "Indtast navn her";
     nameField.style.position = "absolute";
-    nameField.style.top = "0";
-    nameField.style.left = "150px"; // Adjust this value
+    nameField.style.top = "10px";
+    nameField.style.left = "220px"; // Adjust this value
     document.body.appendChild(nameField);
 }
 
-function addSaveButton() {
+function addSaveButton(buttonContainer) {
     let saveButton = document.createElement("button");
     saveButton.textContent = "Gem";
-    saveButton.style.position = "absolute";
-    saveButton.style.top = "0";
-    saveButton.style.left = "0";
     saveButton.onclick = save;
-    document.body.appendChild(saveButton); // Append the button to the body
+    buttonContainer.appendChild(saveButton); // Append the button to the body
 }
 
-function addExportButton() {
+function addExportButton(buttonContainer) {
     let exportButton = document.createElement("button");
     exportButton.textContent = "Exporter";
-    exportButton.style.position = "absolute";
-    exportButton.style.top = "0";
-    exportButton.style.left = "50px";
+
     exportButton.onclick = exportTipskupon;
-    document.body.appendChild(exportButton); // Append the button to the body
+    buttonContainer.appendChild(exportButton); // Append the button to the body
+}
+
+function addResetButton(buttonContainer) {
+    let resetButton = document.createElement("button");
+    resetButton.textContent = "Nulstil";
+    resetButton.onclick = reset;
+    buttonContainer.appendChild(resetButton); // Append the button to the body
 }
 
 function addButtons() {
-    addSaveButton()
-    addExportButton()
+    let buttonContainer = document.createElement("div");
+    buttonContainer.style.margin = "10px";
+    buttonContainer.style.display = "flex";
+    buttonContainer.style.gap = "10px";
+    addSaveButton(buttonContainer)
+    addExportButton(buttonContainer)
+    addResetButton(buttonContainer)
+    document.body.appendChild(buttonContainer);
 }
 
 //save it in local storage
@@ -271,6 +279,32 @@ function save() {
     showToast("Din tipskupon er gemt succesfuldt!");
     
     
+}
+
+function exportTipskupon() {
+    let nameField = document.getElementById("nameField");
+    if (nameField.value === "") {
+        showToast("Du skal udfylde navn før du kan eksportere!");
+        return;
+    }
+    if (sikreTips > 0 || halvGarderinger > 0 || helGarderinger > 0) {
+        showToast("Du har ikke brugt alle dine tips!");
+        return;
+    }
+    if (sikreTips < 0 || halvGarderinger < 0 || helGarderinger < 0) {
+        showToast("Du overskrider grænsen for en slags tips!");
+        return;
+    }
+    //also more checks should be added
+    //check if all matches are filled out (and the numbers are 0 - this should be enough)
+    
+}
+
+function reset() {
+    if (confirm("Er du sikker på at du vil nulstille? (Dette vil fjerne alt du har udfyldt og det du har gemt)")) {
+        localStorage.clear();
+        location.reload();
+    }
 }
 
 function updateAvailableTeamsOnLoad() {
@@ -403,24 +437,7 @@ function load() {
 }
 
 
-function exportTipskupon() {
-    let nameField = document.getElementById("nameField");
-    if (nameField.value === "") {
-        showToast("Du skal udfylde navn før du kan eksportere!");
-        return;
-    }
-    if (sikreTips > 0 || halvGarderinger > 0 || helGarderinger > 0) {
-        showToast("Du har ikke brugt alle dine tips!");
-        return;
-    }
-    if (sikreTips < 0 || halvGarderinger < 0 || helGarderinger < 0) {
-        showToast("Du overskrider grænsen for en slags tips!");
-        return;
-    }
-    //also more checks should be added
-    //check if all matches are filled out (and the numbers are 0 - this should be enough)
-    
-}
+
 
 function updateRemainingTips(prevValue, currentValue) {
     sikreTips = parseInt(document.getElementById("sikreTipsNumber").textContent);
@@ -682,7 +699,8 @@ function addReferenceContainer() {
 
 
 function addMatches() {
-    const allMatchesDiv = document.getElementById("matchesContainer")
+    let allMatchesDiv = document.createElement("div")
+    allMatchesDiv.id = "matchesContainer";
     allMatchesDiv.style.flexDirection = "column";
     allMatchesDiv.style.alignItems = "center"; // This will horizontally center the matchDiv
     let allMatchesHeader = document.createElement("h2");
@@ -742,6 +760,7 @@ function addMatches() {
             resultSelecter.add(new Option(scoreOption));
         matchDiv.appendChild(resultSelecter);   
     }
+    document.body.appendChild(allMatchesDiv);
 }
 
 function addTeamTips() {
@@ -1124,8 +1143,8 @@ function addPointsInfoOnHeaders() {
     
     
 function setup() {
-    addNameField()
     addButtons()
+    addNameField()
     addReferenceContainer()
     addMatches()
     addTeamTips()
