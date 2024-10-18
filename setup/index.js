@@ -1,12 +1,7 @@
+//! bugs:
 
-//note:
-//fix export button
-//also update the requirements for exporting (all must be filled out)
-
-//bugs:
-
-//extra stuff - nice-to-haves
-//add groups such that you can close all gruppekampe (as well as for the knockout stuff)
+//TODO extra stuff - nice-to-haves
+    //add groups such that you can close all gruppekampe (as well as for the knockout stuff)
 
 
     
@@ -287,17 +282,85 @@ function exportTipskupon() {
         showToast("Du skal udfylde navn før du kan eksportere!");
         return;
     }
+    if (sikreTips < 0 || halvGarderinger < 0 || helGarderinger < 0) {
+        showToast("Du overskrider grænsen for én slags tips!");
+        return;
+    }
     if (sikreTips > 0 || halvGarderinger > 0 || helGarderinger > 0) {
         showToast("Du har ikke brugt alle dine tips!");
         return;
     }
-    if (sikreTips < 0 || halvGarderinger < 0 || helGarderinger < 0) {
-        showToast("Du overskrider grænsen for en slags tips!");
+    let teamTipsContainer = document.getElementById("teamTipsContainer");
+    for (let select of teamTipsContainer.querySelectorAll('select')) {
+        if (select.value === "") {
+            showToast("Du har ikke udfyldt alle holdene!");
+            return;
+        }
+    }
+    let topScorerValue = document.getElementById("topGoalScorerDiv").querySelector('input').value;
+    if (topScorerValue === "") {
+        showToast("Du har ikke udfyldt topscorer!");
         return;
     }
-    //also more checks should be added
-    //check if all matches are filled out (and the numbers are 0 - this should be enough)
-    
+    let daneToScoreValue = document.getElementById("daneScoringDiv").querySelector('input').value;
+    if (daneToScoreValue === "") {
+        showToast("Du har ikke udfyldt dansker der scorer");
+        return;
+    }
+    else {
+        let howManyGoalsDaneScoresValue = document.getElementById("howManyGoalsDaneScoresInput").value;
+        if (howManyGoalsDaneScoresValue === "") {
+            showToast("Du har ikke udfyldt hvor mange mål den dansker scorer");
+            return
+        }
+    }
+    playerToGetRedCardedValue = document.getElementById("playerToGetRedCardedDiv").querySelector('input').value;
+    if (playerToGetRedCardedValue === "") {
+        showToast("Du har ikke udfyldt spiller der får rødt kort");
+        return;
+    }
+    exportToJson();  
+}
+
+function exportToJson() {
+    if (!confirm("Exporter filen? Dette vil downloade en fil, som du skal sende til mig."))
+        return;
+    save();
+
+    // Retrieve all data from local storage
+    let localStorageData = {
+        slutrundeYear: localStorage.getItem('slutrundeYear'),
+        nameValue: localStorage.getItem('nameValue'),
+        matchValues: JSON.parse(localStorage.getItem('matchValues')),
+        ro16Values: JSON.parse(localStorage.getItem('ro16Values')),
+        ro8Values: JSON.parse(localStorage.getItem('ro8Values')),
+        semiValues: JSON.parse(localStorage.getItem('semiValues')),
+        finaleValues: JSON.parse(localStorage.getItem('finaleValues')),
+        winnerValue: localStorage.getItem('winnerValue'),
+        topGoalScorerValue: localStorage.getItem('topGoalScorerValue'),
+        daneToScoreValue: localStorage.getItem('daneToScoreValue'),
+        howManyGoalsDaneScoresValue: localStorage.getItem('howManyGoalsDaneScoresValue'),
+        playerToGetRedCardedValue: localStorage.getItem('playerToGetRedCardedValue')
+    };
+
+    // Convert the data to a JSON string
+    let jsonString = JSON.stringify(localStorageData, null, 2);
+
+    // Create a Blob from the JSON string
+    let blob = new Blob([jsonString], { type: "application/json" });
+
+    // Create a link element
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "localStorageData.json";
+
+    // Append the link to the body
+    document.body.appendChild(link);
+
+    // Programmatically click the link to trigger the download
+    link.click();
+    // Remove the link from the document
+    document.body.removeChild(link);
 }
 
 function reset() {
