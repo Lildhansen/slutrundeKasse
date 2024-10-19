@@ -16,6 +16,10 @@ program der bruger filerne (hvis alle filerne i en mappe):
         der kommer kampe op (1 af gangen):
             jeg skriver 1, x, 2 (måske s hvis jeg skal skippe og kampen ikke er spillet(og noget for at exit))
             når jeg exitter opdateres filen
+    efter alle kampe er udfyldt "gætter" den på en stilling (for nogle kan den være sikre på kun baseret på 1x2)
+        for dem den ikke er sikre på sætter den det op så jeg kan skrive hvem der går videre  
+            hold der er a-point
+            alle 3. pladser
             
 forskellige makes:
 setup (html filen som users skal bruge)

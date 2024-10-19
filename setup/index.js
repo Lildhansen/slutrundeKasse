@@ -322,7 +322,7 @@ function exportTipskupon() {
     exportToJson();  
 }
 
-function exportToJson() {
+function exportToJson() {        
     if (!confirm("Exporter filen? Dette vil downloade en fil, som du skal sende til mig."))
         return;
     save();
@@ -342,7 +342,7 @@ function exportToJson() {
         howManyGoalsDaneScoresValue: localStorage.getItem('howManyGoalsDaneScoresValue'),
         playerToGetRedCardedValue: localStorage.getItem('playerToGetRedCardedValue')
     };
-
+    
     // Convert the data to a JSON string
     let jsonString = JSON.stringify(localStorageData, null, 2);
 
@@ -352,7 +352,7 @@ function exportToJson() {
     // Create a link element
     let link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "localStorageData.json";
+    link.download = localStorageData.nameValue.trim()+".json";
 
     // Append the link to the body
     document.body.appendChild(link);
