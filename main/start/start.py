@@ -1,11 +1,10 @@
 #own imports
 from main.classes.Player import Player
+from main.classes.Excel import setupExcelFile
 
 # non-own imports
 import orjson
 import os
-import openpyxl
-from openpyxl.styles import Font, Color 
 
 
 def loadPlayers():
@@ -30,14 +29,11 @@ def loadPlayers():
         players.append(player)
     return players
                 
-def setupExcelFile():
-    pass
 
 def setup():
     players = loadPlayers()
-    for player in players:
-        print(player.__dict__)
-    setupExcelFile()
+    setupExcelFile(players)
+    
        
             
 if __name__ == '__main__':
