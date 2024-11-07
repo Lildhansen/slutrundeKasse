@@ -17,7 +17,6 @@ def loadPlayers():
             player = Player(data['nameValue'])
             player.groupMatchGames = data['matchValues']
             player.ro16Teams = data['ro16Values']
-            player.ro8Teams = data['ro8Values']
             player.quarterFinalTeams = data['ro8Values']  
             player.semiFinalTeams = data['semiValues']
             player.finalTeams = data['finaleValues']
@@ -26,7 +25,7 @@ def loadPlayers():
             player.daneToScore = data['daneToScoreValue']
             player.howManyGoalsByDane = data['howManyGoalsDaneScoresValue']
             player.redCardedPlayer = data['playerToGetRedCardedValue']
-        players.append(player)
+            players.append(player)
     return players
                 
 

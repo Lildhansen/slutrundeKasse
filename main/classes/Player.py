@@ -3,7 +3,6 @@ class Player:
         self.name = name
         self.groupMatchGames = []
         self.ro16Teams = []
-        self.ro8Teams = []
         self.quarterFinalTeams = []
         self.semiFinalTeams = []
         self.finalTeams = []
