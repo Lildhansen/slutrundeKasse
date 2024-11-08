@@ -1,6 +1,7 @@
 #own imports
 from main.classes.Player import Player
 from main.classes.Excel import setupExcelFile
+from main.classes.Email import sendInitialEmail
 
 # non-own imports
 import orjson
@@ -32,6 +33,9 @@ def loadPlayers():
 def setup():
     players = loadPlayers()
     setupExcelFile(players)
+    sendInitialEmail()
+    #maybe need to add something so u can start but add the emails later (and then send the initial email later)
+        #just take inspiration from feriekasse
     
        
             

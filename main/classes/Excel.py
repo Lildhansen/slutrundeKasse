@@ -161,5 +161,4 @@ def setupExcelFile(players):
     wb.close()
     
 #todo
-    #set cell widths
     #make it look prettier (colors, more distinct borders)
