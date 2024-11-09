@@ -32,10 +32,20 @@ def loadPlayers():
 
 def setup():
     players = loadPlayers()
-    setupExcelFile(players)
-    sendInitialEmail()
-    #maybe need to add something so u can start but add the emails later (and then send the initial email later)
-        #just take inspiration from feriekasse
+    if ('main/data/slutrundeKasse.xlsx' not in os.listdir()):
+        setupExcelFile(players)
+    else:
+        print("Slutrundekasse exists!")
+    willSendInitialEmail = False
+    while (True):
+        userInput = input("Is the Email.ini file set up and do you want to send the initial email? (y/n): ")
+        if len(userInput) > 0 and userInput.lower()[0] == 'y':
+            willSendInitialEmail = True
+            break
+        elif len(userInput) > 0 and userInput.lower()[0] == 'n':
+            break
+    if willSendInitialEmail:
+        sendInitialEmail()
     
        
             
