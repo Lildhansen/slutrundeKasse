@@ -22,8 +22,8 @@ program der bruger filerne (hvis alle filerne i en mappe):
             alle 3. pladser
             
 forskellige makes:
-setup (html filen som users skal bruge)
-start (sætter excelfilen op og loader alt det ind)
+~~setup (html filen som users skal bruge)~~
+~~start (sætter excelfilen op og loader alt det ind)~~
 update (både opdaterer og sender)
 
 
