@@ -29,4 +29,5 @@ update (både opdaterer og sender)
 
 
 advanced:
-get scores from internet
+get scores from internet:
+https://github.com/openfootball/worldcup/blob/master/2026--usa/cup.txt
