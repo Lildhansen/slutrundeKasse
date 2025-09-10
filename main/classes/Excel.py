@@ -17,20 +17,29 @@ def setupNonPlayerText(ws):
         row += 1
         ws.cell(row=row,column=column,value=match.group)
         ws.cell(row=row,column=column+1,value=match.excelPrint())
+    #add subtotal row
+    row += 1
+    ws.cell(row=row,column=column,value="Subtotal:")
+    row += 1
     #ro16 teams:
-    row += 2
     ws.cell(row=row,column=column,value="Hold i ottendedelsfinalen:")
     for i in range(16):
         row += 1
         ws.cell(row=row,column=column+1,value=f"Hold {i+1}")
-    #ro8 teams:
+    #add subtotal row
     row += 1
+    ws.cell(row=row,column=column,value="Subtotal:")
+    row += 1
+    #ro8 teams:
     ws.cell(row=row,column=column,value="Hold i kvartfinalen:")
     for i in range(8):
         row += 1
         ws.cell(row=row,column=column+1,value=f"Hold {i+1}")
-    #semi final teams:
+    #add subtotal row
     row += 1
+    ws.cell(row=row,column=column,value="Subtotal:")
+    row += 1
+    #semi final teams:
     ws.cell(row=row,column=column,value="Hold i semifinalen:")
     for i in range(4):
         row += 1
@@ -44,6 +53,9 @@ def setupNonPlayerText(ws):
     #winner
     row += 1
     ws.cell(row=row,column=column,value="Vinder:")
+    #add subtotal row
+    row += 1
+    ws.cell(row=row,column=column,value="Subtotal:")
     row += 1
     #topscorer
     ws.cell(row=row,column=column,value="Topscorer:")
@@ -56,6 +68,13 @@ def setupNonPlayerText(ws):
     #player to get red card
     row += 1
     ws.cell(row=row,column=column,value="Spiller der får rødt kort:")
+    #add subtotal row
+    row += 1
+    ws.cell(row=row,column=column,value="Subtotal:")
+    row += 1
+    #add total row
+    row += 1
+    ws.cell(row=row,column=column,value="Total:")
 
 def setupPlayerText(ws,player,column):
     row = 1
@@ -63,15 +82,15 @@ def setupPlayerText(ws,player,column):
     for match in player.groupMatchGames:
         row += 1
         ws.cell(row=row,column=column,value=match)
-    row += 2
+    row += 2 #subtotal row
     for team in player.ro16Teams:
         row += 1
         ws.cell(row=row,column=column,value=team)
-    row += 1
+    row += 2 #subtotal row
     for team in player.quarterFinalTeams:
         row += 1
         ws.cell(row=row,column=column,value=team)
-    row += 1
+    row += 2 #subtotal row
     for team in player.semiFinalTeams:
         row += 1
         ws.cell(row=row,column=column,value=team)
@@ -81,7 +100,7 @@ def setupPlayerText(ws,player,column):
         ws.cell(row=row,column=column,value=team)
     row += 1
     ws.cell(row=row,column=column,value=player.winner)
-    row += 1
+    row += 2 #subtotal row
     ws.cell(row=row,column=column,value=player.topScorer.title())
     row += 1
     ws.cell(row=row,column=column,value=player.daneToScore.title())
@@ -111,7 +130,6 @@ def setCellWidths(ws):
             break
 
     for i, cellWidth in enumerate(cellWidths):
-        print(cellWidth)
         ws.column_dimensions[numberToExcelColumn(i+1)].width = cellWidth
     
     
@@ -155,7 +173,9 @@ def setupExcelFile(players):
     for player in players:
         setupPlayerText(ws,player,column)
         column += 1
-        
+    #add "result" column
+    cell = ws.cell(row=1,column=column,value="Resultat")
+    cell.font = Font(bold=True)
     setCellWidths(ws)
     wb.save(fr"main/data/slutrundeKasse.xlsx")
     wb.close()

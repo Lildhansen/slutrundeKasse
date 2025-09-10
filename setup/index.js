@@ -15,7 +15,8 @@ class Match{
         return this.group + ": " + this.homeTeam + " - " + this.awayTeam;        
     }
 }
-const matches =  [new Match('Germany','Scotland','Group A'),new Match('Hungary','Switzerland','Group A'),new Match('Spain','Croatia','Group B'),new Match('Italy','Albania','Group B'),new Match('Poland','Netherlands','Group D'),new Match('Slovenia','Denmark','Group C'),new Match('Serbia','England','Group C'),new Match('Romania','Ukraine','Group E'),new Match('Belgium','Slovakia','Group E'),new Match('Austria','France','Group D'),new Match('Türkiye','Georgia','Group F'),new Match('Portugal','Czechia','Group F'),new Match('Croatia','Albania','Group B'),new Match('Germany','Hungary','Group A'),new Match('Scotland','Switzerland','Group A'),new Match('Slovenia','Serbia','Group C'),new Match('Denmark','England','Group C'),new Match('Spain','Italy','Group B'),new Match('Slovakia','Ukraine','Group E'),new Match('Poland','Austria','Group D'),new Match('Netherlands','France','Group D'),new Match('Georgia','Czechia','Group F'),new Match('Türkiye','Portugal','Group F'),new Match('Belgium','Romania','Group E'),new Match('Switzerland','Germany','Group A'),new Match('Scotland','Hungary','Group A'),new Match('Albania','Spain','Group B'),new Match('Croatia','Italy','Group B'),new Match('Netherlands','Austria','Group D'),new Match('France','Poland','Group D'),new Match('England','Slovenia','Group C'),new Match('Denmark','Serbia','Group C'),new Match('Slovakia','Romania','Group E'),new Match('Ukraine','Belgium','Group E'),new Match('Georgia','Portugal','Group F'),new Match('Czechia','Türkiye','Group F'),];
+
+const matches =  [new Match('Qatar','Ecuador','Group A'),new Match('England','Iran','Group B'),new Match('Senegal','Netherlands','Group A'),new Match('United States','Wales','Group B'),new Match('Argentina','Saudi Arabia','Group C'),new Match('Denmark','Tunisia','Group D'),new Match('Mexico','Poland','Group C'),new Match('France','Australia','Group D'),new Match('Morocco','Croatia','Group F'),new Match('Germany','Japan','Group E'),new Match('Spain','Costa Rica','Group E'),new Match('Belgium','Canada','Group F'),new Match('Switzerland','Cameroon','Group G'),new Match('Uruguay','South Korea','Group H'),new Match('Portugal','Ghana','Group H'),new Match('Brazil','Serbia','Group G'),new Match('Wales','Iran','Group B'),new Match('Qatar','Senegal','Group A'),new Match('Netherlands','Ecuador','Group A'),new Match('England','United States','Group B'),new Match('Tunisia','Australia','Group D'),new Match('Poland','Saudi Arabia','Group C'),new Match('France','Denmark','Group D'),new Match('Argentina','Mexico','Group C'),new Match('Japan','Costa Rica','Group E'),new Match('Belgium','Morocco','Group F'),new Match('Croatia','Canada','Group F'),new Match('Spain','Germany','Group E'),new Match('Cameroon','Serbia','Group G'),new Match('South Korea','Ghana','Group H'),new Match('Brazil','Switzerland','Group G'),new Match('Portugal','Uruguay','Group H'),new Match('Ecuador','Senegal','Group A'),new Match('Netherlands','Qatar','Group A'),new Match('Iran','United States','Group B'),new Match('Wales','England','Group B'),new Match('Australia','Denmark','Group D'),new Match('Tunisia','France','Group D'),new Match('Poland','Argentina','Group C'),new Match('Saudi Arabia','Mexico','Group C'),new Match('Canada','Morocco','Group F'),new Match('Croatia','Belgium','Group F'),new Match('Costa Rica','Germany','Group E'),new Match('Japan','Spain','Group E'),new Match('Ghana','Uruguay','Group H'),new Match('South Korea','Portugal','Group H'),new Match('Cameroon','Brazil','Group G'),new Match('Serbia','Switzerland','Group G'),];
 const scoreOptions = ["1","x","2","1x","x2","12","1x2"]
 const teams = getUniqueTeams()
 const randomMessages = ["","(Modigt!)", "(Er du nu HELT sikker på det?)", "(Ej kom nu, vi er da meget bedre end det!)", "(Interessant!)"];
@@ -399,7 +400,7 @@ function updateRemainingTipsOnLoad() {
             if (match.value === "1" || match.value === "x" || match.value === "2") {
                 sikreTipsValue -= 1;
             }
-            else if (match.value === "1x" || match.value === "x2") {
+            else if (match.value === "1x" || match.value === "x2" || match.value === "12") {
                 halvGarderingerValue -= 1;
             }
             else if (match.value === "1x2") {
@@ -518,6 +519,7 @@ function updateRemainingTips(prevValue, currentValue) {
             break;
         case "1x":
         case "x2":
+        case "12":
             halvGarderinger += 1;
             break;
         case "1x2":
@@ -533,6 +535,7 @@ function updateRemainingTips(prevValue, currentValue) {
             break;
         case "1x":
         case "x2":
+        case "12":
             halvGarderinger -= 1;
             break;
         case "1x2":

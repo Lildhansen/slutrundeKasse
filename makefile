@@ -1,10 +1,9 @@
 .PHONY: setup start run
 
 setup:
-	py setupHelper/hackySetup.py
+	set PYTHONPATH=$(CURDIR) && py setupHelper/hackySetup.py
 
 start:
-	PYTHONPATH=$(CURDIR) py main/start/start.py
-
+	set PYTHONPATH=$(CURDIR) && py main/start/start.py
 run:
-	PYTHONPATH=$(CURDIR) py main/update/update.pys
+	set PYTHONPATH=$(CURDIR) && py main/update/update.py

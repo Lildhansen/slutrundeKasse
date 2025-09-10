@@ -41,13 +41,16 @@ def createStandingsForTeams():
         if not any(team.name == row['away team'] for team in teams):
             teams.append(Team(row['away team'],row['group']))
     #add all teams to the standings json file:
-    with open('main/data/standings.json','w',encoding='utf-8') as f:
-        f.write(orjson.dumps([team.__dict__ for team in teams]).decode('utf-8'))
+    # with open('main/data/standings.json','w',encoding='utf-8') as f:
+    #     f.write(orjson.dumps([team.__dict__ for team in teams]).decode('utf-8'))
                 
 
 def setup():
     config = ConfigParser()
     players = loadPlayers()
+    # Create empty matches_covered.txt (overwrite if it exists)
+    open('main/data/matches_covered.txt', 'w').close()
+    # Excel setup
     if ('main/data/slutrundeKasse.xlsx' not in os.listdir()):
         setupExcelFile(players)
     else:
@@ -64,8 +67,8 @@ def setup():
                 break
         if willSendInitialEmail:
             sendInitialEmail()
-    if ('main/data/standings.json' not in os.listdir()):
-        createStandingsForTeams()
+    # if ('main/data/standings.json' not in os.listdir()):
+    #     createStandingsForTeams()
     
        
             
