@@ -36,9 +36,18 @@ function getTeamsInGroup(group) {
     return teams;   
 }
 
-let sikreTips = 20
-let halvGarderinger = 10
-let helGarderinger = 6
+let sikreTips, halvGarderinger, helGarderinger;
+
+// For 32 matches
+// Scale tips so their sum equals matches.length
+// Default ratios: sikreTips = 5/8, halvGarderinger = 2/8, helGarderinger = 1/8
+let totalMatches = matches.length;
+if (totalMatches > 0) {
+    sikreTips = Math.floor(totalMatches * 5 / 8);
+    halvGarderinger = Math.floor(totalMatches * 2 / 8);
+    helGarderinger = totalMatches - sikreTips - halvGarderinger;
+}
+
 let numberOfTeamsInRo16 = 16;
 let numberOfTeamsInRo8 = 8;
 let numOfTeamsInSemiFinals = 4;
@@ -229,6 +238,10 @@ function save() {
             finaleValues[i] = finaleValue;
         }
     }
+
+    //Hvor langt når Danmark
+    let howFarDenmarkReaches = howFarDenmarkReachesResult;
+
     //vinder
     let winnerValue = document.getElementById("winnerDiv").querySelector('select').value
     
@@ -250,6 +263,7 @@ function save() {
     console.log("Semi Values: ", semiValues);
     console.log("Finale Values: ", finaleValues);
     console.log("Winner Value: ", winnerValue);
+    console.log("How Far Denmark Reaches: ", howFarDenmarkReaches);
     console.log("Top Goal Scorer Value: ", topGoalScorerValue);
     console.log("Dane To Score Value: ", daneToScoreValue);
     console.log("How Many Goals Dane Scores Value: ", howManyGoalsDaneScoresValue);
@@ -266,15 +280,14 @@ function save() {
     localStorage.setItem('semiValues', JSON.stringify(semiValues));
     localStorage.setItem('finaleValues', JSON.stringify(finaleValues));
     localStorage.setItem('winnerValue', winnerValue);
+    localStorage.setItem('howFarDenmarkReaches', howFarDenmarkReaches);
     localStorage.setItem('topGoalScorerValue', topGoalScorerValue);
     localStorage.setItem('daneToScoreValue', daneToScoreValue);
     localStorage.setItem('howManyGoalsDaneScoresValue', howManyGoalsDaneScoresValue);
     localStorage.setItem('playerToGetRedCardedValue', playerToGetRedCardedValue);
     
     //add toast message
-    showToast("Din tipskupon er gemt succesfuldt!");
-    
-    
+    showToast("Din tipskupon er gemt succesfuldt!");   
 }
 
 function exportTipskupon() {
@@ -338,6 +351,7 @@ function exportToJson() {
         semiValues: JSON.parse(localStorage.getItem('semiValues')),
         finaleValues: JSON.parse(localStorage.getItem('finaleValues')),
         winnerValue: localStorage.getItem('winnerValue'),
+        howFarDenmarkReachesValue: localStorage.getItem('howFarDenmarkReaches'),
         topGoalScorerValue: localStorage.getItem('topGoalScorerValue'),
         daneToScoreValue: localStorage.getItem('daneToScoreValue'),
         howManyGoalsDaneScoresValue: localStorage.getItem('howManyGoalsDaneScoresValue'),

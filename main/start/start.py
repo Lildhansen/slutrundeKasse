@@ -25,6 +25,7 @@ def loadPlayers():
             player.semiFinalTeams = data['semiValues']
             player.finalTeams = data['finaleValues']
             player.winner = data['winnerValue']
+            player.howFarDenmarkReaches = data['howFarDenmarkReachesValue']
             player.topScorer = data['topGoalScorerValue']
             player.daneToScore = data['daneToScoreValue']
             player.howManyGoalsByDane = data['howManyGoalsDaneScoresValue']
@@ -49,7 +50,7 @@ def setup():
     config = ConfigParser()
     players = loadPlayers()
     # Create empty matches_covered.txt (overwrite if it exists)
-    open('main/data/matches_covered.txt', 'w').close()
+    # open('main/data/matches_covered.txt', 'w').close()
     # Excel setup
     if ('main/data/slutrundeKasse.xlsx' not in os.listdir()):
         setupExcelFile(players)

@@ -2,6 +2,8 @@
 *.ini
 *.json
 *.xlsx
+main/data/
+main/data/**
 
 # Standard Python .gitignore
 # Byte-compiled / optimized / DLL files

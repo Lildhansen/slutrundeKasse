@@ -7,6 +7,7 @@ class Player:
         self.semiFinalTeams = []
         self.finalTeams = []
         self.winner = None
+        self.howFarDenmarkReaches = None
         self.topScorer = None
         self.daneToScore = None
         self.howManyGoalsByDane = None
