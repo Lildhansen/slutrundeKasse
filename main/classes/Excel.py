@@ -8,7 +8,9 @@ import os
 
 green_fill = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="solid")
 red_fill = PatternFill(start_color="FFB6C1", end_color="FFB6C1", fill_type="solid")
+#the one where it at first says different teams (croatia - denmark)
 TEAM_COLUMN = 2
+from util.constants import HAS_ROUND_OF_32
 
 #sets up the text on the left side (so not the actual data for the players)
 def setupNonPlayerText(ws):
@@ -24,6 +26,14 @@ def setupNonPlayerText(ws):
         ws.cell(row=row,column=column+1,value=match.excelPrint())
     #add subtotal row
     row = addSubTotalRowHeader(ws,row,column)
+    if HAS_ROUND_OF_32:
+        #ro32 teams:
+        ws.cell(row=row,column=column,value="Hold i sekstendelsfinalen:")
+        for i in range(32):
+            row += 1
+            ws.cell(row=row,column=column+1,value=f"Hold {i+1}")
+        #add subtotal row
+        row = addSubTotalRowHeader(ws,row,column)
     #ro16 teams:
     ws.cell(row=row,column=column,value="Hold i ottendedelsfinalen:")
     for i in range(16):
@@ -82,6 +92,11 @@ def setupPlayerText(ws,player,column):
         row += 1
         ws.cell(row=row,column=column,value=match)
     row += 2 #subtotal row
+    if HAS_ROUND_OF_32:
+        for team in player.ro32Teams:
+            row += 1
+            ws.cell(row=row,column=column,value=team)
+        row += 2 #subtotal row
     for team in player.ro16Teams:
         row += 1
         ws.cell(row=row,column=column,value=team)
@@ -180,7 +195,7 @@ def setupExcelFile(players):
     wb.save(fr"main/data/slutrundeKasse.xlsx")
     wb.close()
 
-def updateExcelFile(groupStageMatches, teamsInRo16, teamsInRo8, teamsInSemiFinals, teamsInFinal, winner):
+def updateExcelFile(groupStageMatches, teamsInRo16, teamsInRo8, teamsInSemiFinals, teamsInFinal, winner, teamsInRo32=[]):
     file_path = os.path.join('main', 'data', 'slutrundeKasse.xlsx')
     wb = openpyxl.load_workbook(file_path)
     ws = wb.active  # or wb['SheetName'] for a specific sheet
@@ -190,6 +205,8 @@ def updateExcelFile(groupStageMatches, teamsInRo16, teamsInRo8, teamsInSemiFinal
     if groupStageMatches != []:
         row = handleGroupStageMatches(groupStageMatches, ws, resultColumn, row)
     print(row)
+    if teamsInRo32 != []:
+        row = handleKnockoutStageMatches(teamsInRo32, ws, resultColumn, row)
     if teamsInRo16 != []:
         row = handleKnockoutStageMatches(teamsInRo16, ws, resultColumn, row)
     if teamsInRo8 != []:
@@ -375,6 +392,8 @@ def setSubtotals(ws, resultColumn):
 def setPointsToAward(sectionName, pointsToAward):
     if sectionName == "Gruppe:":
         return 1
+    elif sectionName == "Hold i sekstendelsfinalen:":
+        return 1
     elif sectionName == "Hold i ottendedelsfinalen:":
         return 1
     elif sectionName == "Hold i kvartfinalen:":
@@ -386,7 +405,7 @@ def setPointsToAward(sectionName, pointsToAward):
     elif sectionName == "Vinder:":
         return 1
     elif sectionName == "Hvor langt når Danmark:":
-        return 2
+        return 1
     elif sectionName == "Topscorer:":
         return 2
     elif sectionName == "Dansker der scorer:":

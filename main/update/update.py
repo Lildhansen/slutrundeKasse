@@ -2,7 +2,10 @@
 
 import datetime
 import requests, json, os
+
 import main.classes.Excel as Excel
+import main.classes.Email as Email
+from util.constants import HAS_ROUND_OF_32
 
 #CONSTANTS
 groupStageSlugName = "group-stage"
@@ -15,7 +18,10 @@ finalSlugName = "final"
 #config variables
 firstDayOfTournament = datetime.datetime(year=2022, month=11, day=20)
 tournamentType = "fifa.world"
-firstKnockoutType = ro16SlugName
+if HAS_ROUND_OF_32:
+    firstKnockoutType = ro32SlugName
+else:
+    firstKnockoutType = ro16SlugName
 
 #global variables
 groupStageMatches = []
@@ -86,11 +92,17 @@ def handleKnockoutMatchesOnDay(date, knockoutType):
         home = competition["competitors"][0]
         away = competition["competitors"][1]
 
+        #the teams in the first knockout type is determined by looking at the matches in this knockout type
         #populate first knockout type
         if event['season']['slug'] == firstKnockoutType:
-            teamsInRo16.append(home["team"]["displayName"]) #should be ro32 for 2026
-            teamsInRo16.append(away["team"]["displayName"]) #should be ro32 for 2026
+            if HAS_ROUND_OF_32:
+                teamsInRo32.append(home["team"]["displayName"]) 
+                teamsInRo32.append(away["team"]["displayName"])
+            else:
+                teamsInRo16.append(home["team"]["displayName"]) 
+                teamsInRo16.append(away["team"]["displayName"])
 
+        #the teams in the other knockout types is determined by looking at the previous knockout type and checking the winner of these
         # Determine winner
         if home.get("winner"):
             winner = home["team"]["displayName"]
@@ -100,7 +112,7 @@ def handleKnockoutMatchesOnDay(date, knockoutType):
             raise Exception("Knockout match with id ", event_id, "cannot end in a draw")
         addToCorrectKnockoutTeamList(winner, knockoutType)
         
-
+#determine based on previous knockout type
 def addToCorrectKnockoutTeamList(winningTeam, knockoutType):
     global winnerTeam
     if knockoutType == ro32SlugName:
@@ -173,7 +185,7 @@ def setTestData():
         {'home': 'Ghana', 'away': 'Uruguay', 'result': '2'}, {'home': 'South Korea', 'away': 'Portugal', 'result': '1'},
         {'home': 'Cameroon', 'away': 'Brazil', 'result': '1'}, {'home': 'Serbia', 'away': 'Switzerland', 'result': '2'}
     ]
-    teamsInRo32 = []
+    teamsInRo32 = [] #could add for testing
     teamsInRo16 = ['Netherlands', 'United States', 'Argentina', 'Australia', 'France', 'Poland', 'England', 'Senegal', 'Japan', 'Croatia', 'Brazil', 'South Korea', 'Morocco', 'Spain', 'Portugal', 'Switzerland']
     teamsInRo8 = ['Netherlands', 'Argentina', 'France', 'England', 'Croatia', 'Brazil', 'Morocco', 'Portugal']
     teamsInSemiFinals = ['Croatia', 'Argentina', 'Morocco', 'France']
@@ -203,9 +215,21 @@ if __name__ == "__main__":
 
     setTestData() #comment out to use live data
     
-    Excel.updateExcelFile(groupStageMatches, teamsInRo16, teamsInRo8, teamsInSemiFinals, teamsInFinal, winnerTeam)
+    if HAS_ROUND_OF_32:
+        Excel.updateExcelFile(groupStageMatches, teamsInRo16, teamsInRo8, teamsInSemiFinals, teamsInFinal, winnerTeam, teamsInRo32)
+    else:
+        Excel.updateExcelFile(groupStageMatches, teamsInRo16, teamsInRo8, teamsInSemiFinals, teamsInFinal, winnerTeam)
     # updatePreviousDateRun(currentDate)
+    # Email.sendPeriodicMail()
+
+
+
+
+
+
     print("Group stage matches:", groupStageMatches)
+    if HAS_ROUND_OF_32:
+        print("Teams in round of 32:", teamsInRo32)
     print("Teams in round of 16:", teamsInRo16)
     print("Teams in quarter finals:", teamsInRo8)
     print("Teams in semi finals:", teamsInSemiFinals)

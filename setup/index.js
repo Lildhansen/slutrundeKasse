@@ -3,7 +3,7 @@
 //TODO extra stuff - nice-to-haves
     //add groups such that you can close all gruppekampe (as well as for the knockout stuff)
 
-
+HAS_ROUND_OF_32 = false
     
 class Match{
     constructor(homeTeam,awayTeam,group){
@@ -47,7 +47,7 @@ if (totalMatches > 0) {
     halvGarderinger = Math.floor(totalMatches * 2 / 8);
     helGarderinger = totalMatches - sikreTips - halvGarderinger;
 }
-
+let numberOfTeamsInRo32 = 32;
 let numberOfTeamsInRo16 = 16;
 let numberOfTeamsInRo8 = 8;
 let numOfTeamsInSemiFinals = 4;
@@ -106,29 +106,38 @@ function showToast(message) {
 
 function updateHowFarDenmarkReaches() {
     let howFarDenmarkReachesResultBackup = howFarDenmarkReachesResult;
+    let ro32Div;
+    if (HAS_ROUND_OF_32)
+        ro32Div = document.getElementById("ro32Div");
     let ro16Div = document.getElementById("ro16Div");
     let ro8Div = document.getElementById("ro8Div");
     let semiDiv = document.getElementById("semiDiv");
     let finalsDiv = document.getElementById("finalsDiv");
 
-    let denmarkIsInRo8 = Array.from(ro8Div.querySelectorAll('select')).some(select => select.value === "Denmark");
-    let denmarkIsInSemi = Array.from(semiDiv.querySelectorAll('select')).some(select => select.value === "Denmark");
     let denmarkIsInFinals = Array.from(finalsDiv.querySelectorAll('select')).some(select => select.value === "Denmark");
+    let denmarkIsInSemi = Array.from(semiDiv.querySelectorAll('select')).some(select => select.value === "Denmark");
+    let denmarkIsInRo8 = Array.from(ro8Div.querySelectorAll('select')).some(select => select.value === "Denmark");
     let denmarkIsInRo16 = Array.from(ro16Div.querySelectorAll('select')).some(select => select.value === "Denmark");
+    let denmarkIsInRo32 = false;
+    if (HAS_ROUND_OF_32)
+        denmarkIsInRo32 = Array.from(ro32Div.querySelectorAll('select')).some(select => select.value === "Denmark");
     if (denmarkIsInRo8 || denmarkIsInSemi || denmarkIsInFinals) {
         howFarDenmarkReachesResult = "Mindst en kvartfinale";
     }
     else if (denmarkIsInRo16) {
         howFarDenmarkReachesResult = "ud i ottendedelsfinalerne";
     }
+    else if (denmarkIsInRo32) {
+        howFarDenmarkReachesResult = "ud i sekstendelsfinalen";
+    }
     else {
         howFarDenmarkReachesResult = "Ud i gruppespillet";
     } 
     
-    if (Array.from(ro16Div.querySelectorAll('select')).every(select => select.value !== "") 
-        && !Array.from(ro16Div.querySelectorAll('select')).some(select => select.value === "Denmark")) {
-        howFarDenmarkReachesResult = "Ud i grupperspillet";
-    }
+    // if (Array.from(ro16Div.querySelectorAll('select')).every(select => select.value !== "") 
+    //     && !Array.from(ro16Div.querySelectorAll('select')).some(select => select.value === "Denmark")) {
+    //     howFarDenmarkReachesResult = "Ud i grupperspillet";
+    // }
         
     elem = document.getElementById("howFarDenmarkReachesResultElement");
     //if the results has not changed then dont update the text (also avoid the random messages)
@@ -202,6 +211,18 @@ function save() {
         }
     /// save the matchValues
     }
+    //1/16
+    let ro32Values = Array(numberOfTeamsInRo32).fill("");
+    if (HAS_ROUND_OF_32)
+    {
+        for(let i = 0; i < numberOfTeamsInRo32; i++) {
+            let resultSelecter = document.getElementById("ro32Div").querySelectorAll('select')[i];
+            let ro32Value = resultSelecter.value;
+            if (ro32Value !== "") {
+                ro32Values[i] = ro32Value;
+            }
+        }
+    }
     //1/8
     let ro16Values = Array(numberOfTeamsInRo16).fill("");
     for(let i = 0; i < numberOfTeamsInRo16; i++) {
@@ -258,6 +279,8 @@ function save() {
     let playerToGetRedCardedValue = document.getElementById("playerToGetRedCardedDiv").querySelector('input').value;
     console.log("Name Value: ", nameValue);
     console.log("Match Values: ", matchValues);
+    if (HAS_ROUND_OF_32)
+        console.log("Ro32 Values: ", ro32Values);
     console.log("Ro16 Values: ", ro16Values);
     console.log("Ro8 Values: ", ro8Values);
     console.log("Semi Values: ", semiValues);
@@ -275,6 +298,8 @@ function save() {
     localStorage.setItem('slutrundeYear', currentSlutRundeYear);
     localStorage.setItem('nameValue', nameValue);
     localStorage.setItem('matchValues', JSON.stringify(matchValues));
+    if (HAS_ROUND_OF_32)
+        localStorage.setItem('ro32Values', JSON.stringify(ro32Values));
     localStorage.setItem('ro16Values', JSON.stringify(ro16Values));
     localStorage.setItem('ro8Values', JSON.stringify(ro8Values));
     localStorage.setItem('semiValues', JSON.stringify(semiValues));
@@ -343,20 +368,24 @@ function exportToJson() {
 
     // Retrieve all data from local storage
     let localStorageData = {
-        slutrundeYear: localStorage.getItem('slutrundeYear'),
-        nameValue: localStorage.getItem('nameValue'),
-        matchValues: JSON.parse(localStorage.getItem('matchValues')),
-        ro16Values: JSON.parse(localStorage.getItem('ro16Values')),
-        ro8Values: JSON.parse(localStorage.getItem('ro8Values')),
-        semiValues: JSON.parse(localStorage.getItem('semiValues')),
-        finaleValues: JSON.parse(localStorage.getItem('finaleValues')),
-        winnerValue: localStorage.getItem('winnerValue'),
-        howFarDenmarkReachesValue: localStorage.getItem('howFarDenmarkReaches'),
-        topGoalScorerValue: localStorage.getItem('topGoalScorerValue'),
-        daneToScoreValue: localStorage.getItem('daneToScoreValue'),
-        howManyGoalsDaneScoresValue: localStorage.getItem('howManyGoalsDaneScoresValue'),
-        playerToGetRedCardedValue: localStorage.getItem('playerToGetRedCardedValue')
-    };
+    slutrundeYear: localStorage.getItem('slutrundeYear'),
+    nameValue: localStorage.getItem('nameValue'),
+    matchValues: JSON.parse(localStorage.getItem('matchValues')),
+    ro16Values: JSON.parse(localStorage.getItem('ro16Values')),
+    ro8Values: JSON.parse(localStorage.getItem('ro8Values')),
+    semiValues: JSON.parse(localStorage.getItem('semiValues')),
+    finaleValues: JSON.parse(localStorage.getItem('finaleValues')),
+    winnerValue: localStorage.getItem('winnerValue'),
+    howFarDenmarkReachesValue: localStorage.getItem('howFarDenmarkReaches'),
+    topGoalScorerValue: localStorage.getItem('topGoalScorerValue'),
+    daneToScoreValue: localStorage.getItem('daneToScoreValue'),
+    howManyGoalsDaneScoresValue: localStorage.getItem('howManyGoalsDaneScoresValue'),
+    playerToGetRedCardedValue: localStorage.getItem('playerToGetRedCardedValue'),
+    ...(HAS_ROUND_OF_32 && {
+        ro32Values: JSON.parse(localStorage.getItem('ro32Values'))
+    })
+};
+
     
     // Convert the data to a JSON string
     let jsonString = JSON.stringify(localStorageData, null, 2);
@@ -438,6 +467,9 @@ function load() {
     let slutrundeYear = localStorage.getItem('slutrundeYear');
     let nameValue = localStorage.getItem('nameValue');
     let matchValues = JSON.parse(localStorage.getItem('matchValues'));
+    let ro32Values;
+    if (HAS_ROUND_OF_32)
+        ro32Values = JSON.parse(localStorage.getItem('ro32Values'));
     let ro16Values = JSON.parse(localStorage.getItem('ro16Values'));
     let ro8Values = JSON.parse(localStorage.getItem('ro8Values'));
     let semiValues = JSON.parse(localStorage.getItem('semiValues'));
@@ -459,6 +491,15 @@ function load() {
     for (let i = 0; i < matchValues.length; i++) {
         if (matchValues[i] !== "") {
             document.getElementById("match"+i).querySelector('select').value = matchValues[i];
+        }
+    }
+    //ro32
+    if (HAS_ROUND_OF_32)
+    {
+        for (let i = 0; i < ro32Values.length; i++) {
+            if (ro32Values[i] !== "") {
+                document.getElementById("ro32Div").querySelectorAll('select')[i].value = ro32Values[i];
+            }
         }
     }
     //ro16
@@ -853,6 +894,43 @@ function addTeamTips() {
     // outerDiv.style.justifyContent = "center";
     document.body.appendChild(outerDiv);
     
+    // Add Round of 32 (only if applicable)
+    if (HAS_ROUND_OF_32) {
+        let ro32Div = document.createElement("div");
+        ro32Div.id = "ro32Div";
+        let ro32Header = document.createElement("h2");
+        ro32Header.textContent = "Hold i sekstendelsfinalerne";
+        ro32Header.id = "ro32Header";
+        ro32Div.appendChild(ro32Header);
+
+        for (let i = 0; i < numberOfTeamsInRo32; i++) {
+            let ro32MatchSelect = document.createElement("select");
+            ro32MatchSelect.type = "text";
+
+            // Add placeholder option
+            let defaultOptionRo32 = new Option("Hold " + (i + 1), "", true, true);
+            defaultOptionRo32.disabled = true;
+            ro32MatchSelect.add(defaultOptionRo32);
+
+            ro32MatchSelect.style.margin = "5px";
+            ro32MatchSelect.setAttribute('data-prev-value', ro32MatchSelect.value);
+
+            // Add teams
+            for (const team of teams) {
+                ro32MatchSelect.add(new Option(team));
+                ro32MatchSelect.onchange = function () {
+                    handleKnockoutSelectInput(this, ro32Div);
+                    this.setAttribute('data-prev-value', this.value);
+                    handleTeamColoring();
+                };
+            }
+
+            ro32Div.appendChild(ro32MatchSelect);
+        }
+
+        outerDiv.appendChild(ro32Div);
+    }
+
     //add ro16
     let ro16Div = document.createElement("div");
     ro16Div.id = "ro16Div";
@@ -1006,6 +1084,19 @@ function getHowFarDenmarkReaches() {
             return "Ud i ottendedelsfinalerne";
         }
     }
+
+    // out in ro32 (if exists)
+    if (HAS_ROUND_OF_32) {
+        const ro32Div = document.getElementById("ro32Div");
+        if (ro32Div) {
+            for (let select of ro32Div.querySelectorAll('select')) {
+                if (select.value === "Denmark") {
+                    return "Ud i sekstendelsfinalen";
+                }
+            }
+        }
+    }
+
     return "Ud i gruppespillet";
     //out in groups
     
@@ -1194,7 +1285,10 @@ function showPointsInfo(headerElem,text) {
 function addPointsInfoOnHeaders() {
     let gruppespilsHeader = document.getElementById("gruppespilsHeader"); // 1 each
     showPointsInfo(gruppespilsHeader,"1 point for hvert korrekt gæt");
-    
+    if (HAS_ROUND_OF_32) {
+        let ro32Header = document.getElementById("ro32Header"); //1 for each
+        showPointsInfo(ro32Header,"1 point for hvert rigtig gættet hold");
+    }
     let ro16Header = document.getElementById("ro16Header"); //1 for each
     showPointsInfo(ro16Header,"1 point for hvert rigtig gættet hold");
     let ro8Header = document.getElementById("ro8Header"); //1 for each
@@ -1208,7 +1302,7 @@ function addPointsInfoOnHeaders() {
     
     
     let howFarDenmarkReachesHeader = document.getElementById("howFarDenmarkReachesHeader"); //2
-    showPointsInfo(howFarDenmarkReachesHeader,"2 point for at gætte hvor langt Danmark når");
+    showPointsInfo(howFarDenmarkReachesHeader,"1 point for at gætte hvor langt Danmark når");
     let topGoalScorerHeader = document.getElementById("topGoalScorerHeader"); //2
     showPointsInfo(topGoalScorerHeader,"2 point for at gætte topscoreren");
     let daneToScoreHeader = document.getElementById("daneToScoreHeader"); //1

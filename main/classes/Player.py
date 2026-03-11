@@ -2,6 +2,7 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.groupMatchGames = []
+        self.ro32Teams = []
         self.ro16Teams = []
         self.quarterFinalTeams = []
         self.semiFinalTeams = []

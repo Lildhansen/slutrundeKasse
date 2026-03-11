@@ -97,5 +97,21 @@ def sendInitialEmail():
     email.updateInitialMailSentValue()
     os.remove(fr"main/data/slutrundeKasse.png")
 
-def sendRecurringEmail():
-    pass    
+#sends the periodic email with attached image and excel file through smtp
+def sendPeriodicMail():
+    email = Email()
+    message = EmailMessage()
+    email.subject = f"feriekassen for slutrunden er blevet opdateret"
+    email.mailBody = f"En excel fil (.xlsx) samt et billede med pointfordelingen for slutrundens feriekasse er vedhæftet\n"
+    print("Body of the email:",email.mailBody)
+    email.setupMailInfo(message)
+    
+    excelFile = fr"main/data/slutrundeKasse.xlsx" 
+    filename = "feriekasse (" + date.today().strftime("%d-%m-%Y") + ").xlsx"
+    email.attachFiles(message,excelFile,filename,fr"main/data/slutrundeKasse.png")
+    
+    email.connectToSmtpAndSendMail(message)
+
+    ##cleanup (update config file and remove the screenshot)
+    email.updateLastMailSentValue()
+    os.remove(fr"main/data/slutrundeKasse.png")

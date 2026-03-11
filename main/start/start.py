@@ -3,6 +3,7 @@ from main.classes.Player import Player
 from main.classes.Team import Team
 from main.classes.Excel import setupExcelFile
 from main.classes.Email import sendInitialEmail
+from util.constants import HAS_ROUND_OF_32
 
 # non-own imports
 import orjson
@@ -20,6 +21,8 @@ def loadPlayers():
                 data = orjson.loads(f.read())
             player = Player(data['nameValue'])
             player.groupMatchGames = data['matchValues']
+            if HAS_ROUND_OF_32:
+                player.ro32Teams = data['ro32Values'] 
             player.ro16Teams = data['ro16Values']
             player.quarterFinalTeams = data['ro8Values']  
             player.semiFinalTeams = data['semiValues']
