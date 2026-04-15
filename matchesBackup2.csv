@@ -1,0 +1,49 @@
+home team,away team,group
+Qatar,Ecuador,Group A
+England,Iran,Group B
+Senegal,Netherlands,Group A
+United States,Wales,Group B
+Argentina,Saudi Arabia,Group C
+Denmark,Tunisia,Group D
+Mexico,Poland,Group C
+France,Australia,Group D
+Morocco,Croatia,Group F
+Germany,Japan,Group E
+Spain,Costa Rica,Group E
+Belgium,Canada,Group F
+Switzerland,Cameroon,Group G
+Uruguay,South Korea,Group H
+Portugal,Ghana,Group H
+Brazil,Serbia,Group G
+Wales,Iran,Group B
+Qatar,Senegal,Group A
+Netherlands,Ecuador,Group A
+England,United States,Group B
+Tunisia,Australia,Group D
+Poland,Saudi Arabia,Group C
+France,Denmark,Group D
+Argentina,Mexico,Group C
+Japan,Costa Rica,Group E
+Belgium,Morocco,Group F
+Croatia,Canada,Group F
+Spain,Germany,Group E
+Cameroon,Serbia,Group G
+South Korea,Ghana,Group H
+Brazil,Switzerland,Group G
+Portugal,Uruguay,Group H
+Ecuador,Senegal,Group A
+Netherlands,Qatar,Group A
+Iran,United States,Group B
+Wales,England,Group B
+Australia,Denmark,Group D
+Tunisia,France,Group D
+Poland,Argentina,Group C
+Saudi Arabia,Mexico,Group C
+Canada,Morocco,Group F
+Croatia,Belgium,Group F
+Costa Rica,Germany,Group E
+Japan,Spain,Group E
+Ghana,Uruguay,Group H
+South Korea,Portugal,Group H
+Cameroon,Brazil,Group G
+Serbia,Switzerland,Group G

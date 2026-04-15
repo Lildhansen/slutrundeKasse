@@ -3,7 +3,25 @@
 //TODO extra stuff - nice-to-haves
     //add groups such that you can close all gruppekampe (as well as for the knockout stuff)
 
-HAS_ROUND_OF_32 = false
+GROUP_STAGE_MATCHES_POINTS = 2
+
+//THIS NEEDS TO BE UPDATED LIKE IN THE CONSTANTS.PY FILE (THEY NEED TO BE THE SAME)
+RO32_TEAMS_POINTS = 3
+RO16_TEAMS_POINTS = 4
+RO8_TEAMS_POINTS = 4
+SEMI_FINAL_TEAMS_POINTS = 5
+FINAL_TEAMS_POINTS = 5
+
+WINNER_POINTS = 3
+
+TOP_SCORER_POINTS = 6
+HOW_FAR_DANMARK_REACHES_POINTS = 3
+DANE_TO_SCORE_POINTS = 2
+HOW_MANY_GOALS_BY_DANE_POINTS = 3
+RED_CARDED_PLAYER_POINTS = 4
+
+
+HAS_ROUND_OF_32 = true
     
 class Match{
     constructor(homeTeam,awayTeam,group){
@@ -16,7 +34,9 @@ class Match{
     }
 }
 
-const matches =  [new Match('Qatar','Ecuador','Group A'),new Match('England','Iran','Group B'),new Match('Senegal','Netherlands','Group A'),new Match('United States','Wales','Group B'),new Match('Argentina','Saudi Arabia','Group C'),new Match('Denmark','Tunisia','Group D'),new Match('Mexico','Poland','Group C'),new Match('France','Australia','Group D'),new Match('Morocco','Croatia','Group F'),new Match('Germany','Japan','Group E'),new Match('Spain','Costa Rica','Group E'),new Match('Belgium','Canada','Group F'),new Match('Switzerland','Cameroon','Group G'),new Match('Uruguay','South Korea','Group H'),new Match('Portugal','Ghana','Group H'),new Match('Brazil','Serbia','Group G'),new Match('Wales','Iran','Group B'),new Match('Qatar','Senegal','Group A'),new Match('Netherlands','Ecuador','Group A'),new Match('England','United States','Group B'),new Match('Tunisia','Australia','Group D'),new Match('Poland','Saudi Arabia','Group C'),new Match('France','Denmark','Group D'),new Match('Argentina','Mexico','Group C'),new Match('Japan','Costa Rica','Group E'),new Match('Belgium','Morocco','Group F'),new Match('Croatia','Canada','Group F'),new Match('Spain','Germany','Group E'),new Match('Cameroon','Serbia','Group G'),new Match('South Korea','Ghana','Group H'),new Match('Brazil','Switzerland','Group G'),new Match('Portugal','Uruguay','Group H'),new Match('Ecuador','Senegal','Group A'),new Match('Netherlands','Qatar','Group A'),new Match('Iran','United States','Group B'),new Match('Wales','England','Group B'),new Match('Australia','Denmark','Group D'),new Match('Tunisia','France','Group D'),new Match('Poland','Argentina','Group C'),new Match('Saudi Arabia','Mexico','Group C'),new Match('Canada','Morocco','Group F'),new Match('Croatia','Belgium','Group F'),new Match('Costa Rica','Germany','Group E'),new Match('Japan','Spain','Group E'),new Match('Ghana','Uruguay','Group H'),new Match('South Korea','Portugal','Group H'),new Match('Cameroon','Brazil','Group G'),new Match('Serbia','Switzerland','Group G'),];
+// const matches =  [new Match('Qatar','Ecuador','Group A'),new Match('England','Iran','Group B'),new Match('Senegal','Netherlands','Group A'),new Match('United States','Wales','Group B'),new Match('Argentina','Saudi Arabia','Group C'),new Match('Denmark','Tunisia','Group D'),new Match('Mexico','Poland','Group C'),new Match('France','Australia','Group D'),new Match('Morocco','Croatia','Group F'),new Match('Germany','Japan','Group E'),new Match('Spain','Costa Rica','Group E'),new Match('Belgium','Canada','Group F'),new Match('Switzerland','Cameroon','Group G'),new Match('Uruguay','South Korea','Group H'),new Match('Portugal','Ghana','Group H'),new Match('Brazil','Serbia','Group G'),new Match('Wales','Iran','Group B'),new Match('Qatar','Senegal','Group A'),new Match('Netherlands','Ecuador','Group A'),new Match('England','United States','Group B'),new Match('Tunisia','Australia','Group D'),new Match('Poland','Saudi Arabia','Group C'),new Match('France','Denmark','Group D'),new Match('Argentina','Mexico','Group C'),new Match('Japan','Costa Rica','Group E'),new Match('Belgium','Morocco','Group F'),new Match('Croatia','Canada','Group F'),new Match('Spain','Germany','Group E'),new Match('Cameroon','Serbia','Group G'),new Match('South Korea','Ghana','Group H'),new Match('Brazil','Switzerland','Group G'),new Match('Portugal','Uruguay','Group H'),new Match('Ecuador','Senegal','Group A'),new Match('Netherlands','Qatar','Group A'),new Match('Iran','United States','Group B'),new Match('Wales','England','Group B'),new Match('Australia','Denmark','Group D'),new Match('Tunisia','France','Group D'),new Match('Poland','Argentina','Group C'),new Match('Saudi Arabia','Mexico','Group C'),new Match('Canada','Morocco','Group F'),new Match('Croatia','Belgium','Group F'),new Match('Costa Rica','Germany','Group E'),new Match('Japan','Spain','Group E'),new Match('Ghana','Uruguay','Group H'),new Match('South Korea','Portugal','Group H'),new Match('Cameroon','Brazil','Group G'),new Match('Serbia','Switzerland','Group G'),];
+const matches =  [new Match('Mexico','South Africa','Group A'),new Match('South Korea','Czechia','Group A'),new Match('Canada','Bosnia and Herzegovina','Group B'),new Match('United States','Paraguay','Group D'),new Match('Qatar','Switzerland','Group B'),new Match('Brazil','Morocco','Group C'),new Match('Haiti','Scotland','Group C'),new Match('Australia','Türkiye','Group D'),new Match('Germany','Curacao','Group E'),new Match('Netherlands','Japan','Group F'),new Match('Ivory Coast','Ecuador','Group E'),new Match('Sweden','Tunisia','Group F'),new Match('Spain','Cape Verde','Group H'),new Match('Belgium','Egypt','Group G'),new Match('Saudi Arabia','Uruguay','Group H'),new Match('IR Iran','New Zealand','Group G'),new Match('France','Senegal','Group I'),new Match('Iraq','Norway','Group I'),new Match('Argentina','Algeria','Group J'),new Match('Austria','Jordan','Group J'),new Match('Portugal','Congo DR','Group K'),new Match('England','Croatia','Group L'),new Match('Ghana','Panama','Group L'),new Match('Uzbekistan','Colombia','Group K'),new Match('Czechia','South Africa','Group A'),new Match('Switzerland','Bosnia and Herzegovina','Group B'),new Match('Canada','Qatar','Group B'),new Match('Mexico','South Korea','Group A'),new Match('United States','Australia','Group D'),new Match('Scotland','Morocco','Group C'),new Match('Brazil','Haiti','Group C'),new Match('Türkiye','Paraguay','Group D'),new Match('Netherlands','Sweden','Group F'),new Match('Germany','Ivory Coast','Group E'),new Match('Ecuador','Curacao','Group E'),new Match('Tunisia','Japan','Group F'),new Match('Spain','Saudi Arabia','Group H'),new Match('Belgium','IR Iran','Group G'),new Match('Uruguay','Cape Verde','Group H'),new Match('New Zealand','Egypt','Group G'),new Match('Argentina','Austria','Group J'),new Match('France','Iraq','Group I'),new Match('Norway','Senegal','Group I'),new Match('Jordan','Algeria','Group J'),new Match('Portugal','Uzbekistan','Group K'),new Match('England','Ghana','Group L'),new Match('Panama','Croatia','Group L'),new Match('Colombia','Congo DR','Group K'),new Match('Bosnia and Herzegovina','Qatar','Group B'),new Match('Switzerland','Canada','Group B'),new Match('Morocco','Haiti','Group C'),new Match('Scotland','Brazil','Group C'),new Match('Czechia','Mexico','Group A'),new Match('South Africa','South Korea','Group A'),new Match('Curacao','Ivory Coast','Group E'),new Match('Ecuador','Germany','Group E'),new Match('Japan','Sweden','Group F'),new Match('Tunisia','Netherlands','Group F'),new Match('Paraguay','Australia','Group D'),new Match('Türkiye','United States','Group D'),new Match('Norway','France','Group I'),new Match('Senegal','Iraq','Group I'),new Match('Cape Verde','Saudi Arabia','Group H'),new Match('Uruguay','Spain','Group H'),new Match('Egypt','IR Iran','Group G'),new Match('New Zealand','Belgium','Group G'),new Match('Croatia','Ghana','Group L'),new Match('Panama','England','Group L'),new Match('Colombia','Portugal','Group K'),new Match('Congo DR','Uzbekistan','Group K'),new Match('Algeria','Austria','Group J'),new Match('Jordan','Argentina','Group J'),];
+
 const scoreOptions = ["1","x","2","1x","x2","12","1x2"]
 const teams = getUniqueTeams()
 const randomMessages = ["","(Modigt!)", "(Er du nu HELT sikker på det?)", "(Ej kom nu, vi er da meget bedre end det!)", "(Interessant!)"];
@@ -773,6 +793,17 @@ function addPointsInfo() {
     remainingTipsContainer.appendChild(pointsInfo);
 }
 
+
+function getUniqueGroups() {
+    let uniqueGroups = [];
+    for (let match of matches) {
+        if (!uniqueGroups.includes(match.group)) {
+            uniqueGroups.push(match.group);
+        }
+    }
+    return uniqueGroups;
+}
+
 function addGroupOverview() {
     // Create the overall container
     let groupOverviewContainer = document.createElement("div");
@@ -782,18 +813,20 @@ function addGroupOverview() {
     groupOverviewContainer.style.right = "0";
     groupOverviewContainer.style.width = "40%";
     groupOverviewContainer.style.border = "2px solid black";
-    groupOverviewContainer.style.marginTop = "300px"; // Adjust this value as needed
+    groupOverviewContainer.style.marginTop = "250px"; // Adjust this value as needed
 
     // Add some text for demonstration
     let groupOverviewText = document.createElement("p");
     groupOverviewText.textContent = "Grupper:";
     groupOverviewContainer.appendChild(groupOverviewText);
-    const groups = ["Group A", "Group B", "Group C", "Group D", "Group E", "Group F"];
+    const groups = getUniqueGroups();
     for (let group of groups) {
         let groupDiv = document.createElement("div");
         groupDiv.style.display = "flex";
+        groupDiv.style.margin = "15px 0"; // Add some spacing between groups
         let groupText = document.createElement("p");
         groupText.textContent = group + ": ";
+        groupText.style.margin = "0"; // Remove default paragraph margins
         let teams = getTeamsInGroup(group);
         for (let i = 0; i < teams.length; i++) {
             let teamSpan = document.createElement("span");
@@ -1158,7 +1191,7 @@ function addHowManyGoalsByPickedDane() {
         howManyGoalsDaneScoresHeader.textContent = `... og hvor mange mål scorer ${daneScoringValue}:`;
         howManyGoalsDaneScoresHeader.style.display = 'inline-block';
         howManyGoalsDaneScoresInput.style.display = 'inline-block';
-        showPointsInfo(howManyGoalsDaneScoresHeader,`1 point for at gætte antal mål ${daneScoringValue} scorer`);
+        showPointsInfo(howManyGoalsDaneScoresHeader,`${HOW_MANY_GOALS_BY_DANE_POINTS} point for at gætte antal mål ${daneScoringValue} scorer`);
     }
     
 }
@@ -1283,33 +1316,33 @@ function showPointsInfo(headerElem,text) {
 }
       
 function addPointsInfoOnHeaders() {
-    let gruppespilsHeader = document.getElementById("gruppespilsHeader"); // 1 each
-    showPointsInfo(gruppespilsHeader,"1 point for hvert korrekt gæt");
+    let gruppespilsHeader = document.getElementById("gruppespilsHeader"); // 2 each
+    showPointsInfo(gruppespilsHeader,`${GROUP_STAGE_MATCHES_POINTS} point for hvert korrekt gæt`);
     if (HAS_ROUND_OF_32) {
-        let ro32Header = document.getElementById("ro32Header"); //1 for each
-        showPointsInfo(ro32Header,"1 point for hvert rigtig gættet hold");
+        let ro32Header = document.getElementById("ro32Header"); //3 for each
+        showPointsInfo(ro32Header,`${RO32_TEAMS_POINTS} point for hvert rigtig gættet hold`);
     }
-    let ro16Header = document.getElementById("ro16Header"); //1 for each
-    showPointsInfo(ro16Header,"1 point for hvert rigtig gættet hold");
-    let ro8Header = document.getElementById("ro8Header"); //1 for each
-    showPointsInfo(ro8Header,"1 point for hvert rigtig gættet hold");
-    let semiHeader = document.getElementById("semiHeader"); //1 for each
-    showPointsInfo(semiHeader,"1 point for hvert rigtig gættet hold");
-    let finalsHeader = document.getElementById("finalsHeader"); //2 for each
-    showPointsInfo(finalsHeader,"2 point for hvert rigtig gættet hold");
-    let winnerHeader = document.getElementById("winnerHeader"); //1
-    showPointsInfo(winnerHeader,"1 point for at gætte vinderen");
+    let ro16Header = document.getElementById("ro16Header"); //4 for each
+    showPointsInfo(ro16Header,`${RO16_TEAMS_POINTS} point for hvert rigtig gættet hold`);
+    let ro8Header = document.getElementById("ro8Header"); //4 for each
+    showPointsInfo(ro8Header,`${RO8_TEAMS_POINTS} point for hvert rigtig gættet hold`);
+    let semiHeader = document.getElementById("semiHeader"); //5 for each
+    showPointsInfo(semiHeader,`${SEMI_FINAL_TEAMS_POINTS} point for hvert rigtig gættet hold`);
+    let finalsHeader = document.getElementById("finalsHeader"); //5 for each
+    showPointsInfo(finalsHeader,`${FINAL_TEAMS_POINTS} point for hvert rigtig gættet hold`);
+    let winnerHeader = document.getElementById("winnerHeader"); //3
+    showPointsInfo(winnerHeader,`${WINNER_POINTS} point for at gætte vinderen`);
     
     
-    let howFarDenmarkReachesHeader = document.getElementById("howFarDenmarkReachesHeader"); //2
-    showPointsInfo(howFarDenmarkReachesHeader,"1 point for at gætte hvor langt Danmark når");
-    let topGoalScorerHeader = document.getElementById("topGoalScorerHeader"); //2
-    showPointsInfo(topGoalScorerHeader,"2 point for at gætte topscoreren");
-    let daneToScoreHeader = document.getElementById("daneToScoreHeader"); //1
-    showPointsInfo(daneToScoreHeader,"1 point for at gætte en dansker der scorer");
+    let howFarDenmarkReachesHeader = document.getElementById("howFarDenmarkReachesHeader"); //3
+    showPointsInfo(howFarDenmarkReachesHeader,`${HOW_FAR_DANMARK_REACHES_POINTS} point for at gætte hvor langt Danmark når`);
+    let topGoalScorerHeader = document.getElementById("topGoalScorerHeader"); //6
+    showPointsInfo(topGoalScorerHeader,`${TOP_SCORER_POINTS} point for at gætte topscoreren`);
+    let daneToScoreHeader = document.getElementById("daneToScoreHeader"); //2
+    showPointsInfo(daneToScoreHeader,`${DANE_TO_SCORE_POINTS} point for at gætte en dansker der scorer`);
     //how many goals he scores is done in another function as this text is not always shown 
-    let playerToGetRedCardedHeader = document.getElementById("playerToGetRedCardedHeader"); //2
-    showPointsInfo(playerToGetRedCardedHeader,"2 point for at gætte en spiller der får rødt kort");
+    let playerToGetRedCardedHeader = document.getElementById("playerToGetRedCardedHeader"); //4
+    showPointsInfo(playerToGetRedCardedHeader,`${RED_CARDED_PLAYER_POINTS} point for at gætte en spiller der får rødt kort`);
     
     
 

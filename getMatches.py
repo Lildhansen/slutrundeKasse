@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 outfile = "matches.csv"
 
 #this should be changed to the actual dates of the world cup
-start_date = datetime(2022, 11, 20)
-end_date = datetime(2022, 12, 2)
+start_date = datetime(2026, 6, 11)
+end_date = datetime(2026, 6, 28)
 
 class Match:
     def __init__(self, home_team, away_team, id):

@@ -1,49 +1,73 @@
 home team,away team,group
-Qatar,Ecuador,Group A
-England,Iran,Group B
-Senegal,Netherlands,Group A
-United States,Wales,Group B
-Argentina,Saudi Arabia,Group C
-Denmark,Tunisia,Group D
-Mexico,Poland,Group C
-France,Australia,Group D
-Morocco,Croatia,Group F
-Germany,Japan,Group E
-Spain,Costa Rica,Group E
-Belgium,Canada,Group F
-Switzerland,Cameroon,Group G
-Uruguay,South Korea,Group H
-Portugal,Ghana,Group H
-Brazil,Serbia,Group G
-Wales,Iran,Group B
-Qatar,Senegal,Group A
-Netherlands,Ecuador,Group A
-England,United States,Group B
-Tunisia,Australia,Group D
-Poland,Saudi Arabia,Group C
-France,Denmark,Group D
-Argentina,Mexico,Group C
-Japan,Costa Rica,Group E
-Belgium,Morocco,Group F
-Croatia,Canada,Group F
-Spain,Germany,Group E
-Cameroon,Serbia,Group G
-South Korea,Ghana,Group H
-Brazil,Switzerland,Group G
-Portugal,Uruguay,Group H
-Ecuador,Senegal,Group A
-Netherlands,Qatar,Group A
-Iran,United States,Group B
-Wales,England,Group B
-Australia,Denmark,Group D
-Tunisia,France,Group D
-Poland,Argentina,Group C
-Saudi Arabia,Mexico,Group C
-Canada,Morocco,Group F
-Croatia,Belgium,Group F
-Costa Rica,Germany,Group E
-Japan,Spain,Group E
-Ghana,Uruguay,Group H
-South Korea,Portugal,Group H
-Cameroon,Brazil,Group G
-Serbia,Switzerland,Group G
+Mexico,South Africa,Group A
+South Korea,Czechia,Group A
+Canada,Bosnia and Herzegovina,Group B
+United States,Paraguay,Group D
+Qatar,Switzerland,Group B
+Brazil,Morocco,Group C
+Haiti,Scotland,Group C
+Australia,Türkiye,Group D
+Germany,Curacao,Group E
+Netherlands,Japan,Group F
+Ivory Coast,Ecuador,Group E
+Sweden,Tunisia,Group F
+Spain,Cape Verde,Group H
+Belgium,Egypt,Group G
+Saudi Arabia,Uruguay,Group H
+IR Iran,New Zealand,Group G
+France,Senegal,Group I
+Iraq,Norway,Group I
+Argentina,Algeria,Group J
+Austria,Jordan,Group J
+Portugal,Congo DR,Group K
+England,Croatia,Group L
+Ghana,Panama,Group L
+Uzbekistan,Colombia,Group K
+Czechia,South Africa,Group A
+Switzerland,Bosnia and Herzegovina,Group B
+Canada,Qatar,Group B
+Mexico,South Korea,Group A
+United States,Australia,Group D
+Scotland,Morocco,Group C
+Brazil,Haiti,Group C
+Türkiye,Paraguay,Group D
+Netherlands,Sweden,Group F
+Germany,Ivory Coast,Group E
+Ecuador,Curacao,Group E
+Tunisia,Japan,Group F
+Spain,Saudi Arabia,Group H
+Belgium,IR Iran,Group G
+Uruguay,Cape Verde,Group H
+New Zealand,Egypt,Group G
+Argentina,Austria,Group J
+France,Iraq,Group I
+Norway,Senegal,Group I
+Jordan,Algeria,Group J
+Portugal,Uzbekistan,Group K
+England,Ghana,Group L
+Panama,Croatia,Group L
+Colombia,Congo DR,Group K
+Bosnia and Herzegovina,Qatar,Group B
+Switzerland,Canada,Group B
+Morocco,Haiti,Group C
+Scotland,Brazil,Group C
+Czechia,Mexico,Group A
+South Africa,South Korea,Group A
+Curacao,Ivory Coast,Group E
+Ecuador,Germany,Group E
+Japan,Sweden,Group F
+Tunisia,Netherlands,Group F
+Paraguay,Australia,Group D
+Türkiye,United States,Group D
+Norway,France,Group I
+Senegal,Iraq,Group I
+Cape Verde,Saudi Arabia,Group H
+Uruguay,Spain,Group H
+Egypt,IR Iran,Group G
+New Zealand,Belgium,Group G
+Croatia,Ghana,Group L
+Panama,England,Group L
+Colombia,Portugal,Group K
+Congo DR,Uzbekistan,Group K
+Algeria,Austria,Group J
+Jordan,Argentina,Group J

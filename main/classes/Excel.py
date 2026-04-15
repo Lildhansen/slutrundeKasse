@@ -10,7 +10,7 @@ green_fill = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="so
 red_fill = PatternFill(start_color="FFB6C1", end_color="FFB6C1", fill_type="solid")
 #the one where it at first says different teams (croatia - denmark)
 TEAM_COLUMN = 2
-from util.constants import HAS_ROUND_OF_32
+from util.constants import HAS_ROUND_OF_32, GROUP_STAGE_MATCHES_POINTS, RO32_TEAMS_POINTS, RO16_TEAMS_POINTS, RO8_TEAMS_POINTS, SEMI_FINAL_TEAMS_POINTS, FINAL_TEAMS_POINTS, WINNER_POINTS, TOP_SCORER_POINTS, HOW_FAR_DANMARK_REACHES_POINTS, DANE_TO_SCORE_POINTS, HOW_MANY_GOALS_BY_DANE_POINTS, RED_CARDED_PLAYER_POINTS
 
 #sets up the text on the left side (so not the actual data for the players)
 def setupNonPlayerText(ws):
@@ -391,29 +391,29 @@ def setSubtotals(ws, resultColumn):
 
 def setPointsToAward(sectionName, pointsToAward):
     if sectionName == "Gruppe:":
-        return 1
+        return GROUP_STAGE_MATCHES_POINTS
     elif sectionName == "Hold i sekstendelsfinalen:":
-        return 1
+        return RO32_TEAMS_POINTS
     elif sectionName == "Hold i ottendedelsfinalen:":
-        return 1
+        return RO16_TEAMS_POINTS
     elif sectionName == "Hold i kvartfinalen:":
-        return 1
+        return RO8_TEAMS_POINTS
     elif sectionName == "Hold i semifinalen:":
-        return 1
+        return SEMI_FINAL_TEAMS_POINTS
     elif sectionName == "Hold i finalen:":
-        return 2
+        return FINAL_TEAMS_POINTS
     elif sectionName == "Vinder:":
-        return 1
+        return WINNER_POINTS
     elif sectionName == "Hvor langt når Danmark:":
-        return 1
+        return HOW_FAR_DANMARK_REACHES_POINTS
     elif sectionName == "Topscorer:":
-        return 2
+        return TOP_SCORER_POINTS
     elif sectionName == "Dansker der scorer:":
-        return 1
+        return DANE_TO_SCORE_POINTS
     elif sectionName == "Hvor mange mål scorer den valgte dansker:":
-        return 1
+        return HOW_MANY_GOALS_BY_DANE_POINTS
     elif sectionName == "Spiller der får rødt kort:":
-        return 2
+        return RED_CARDED_PLAYER_POINTS
     #if no change in section, use same points to add as before
     else:
         return pointsToAward
