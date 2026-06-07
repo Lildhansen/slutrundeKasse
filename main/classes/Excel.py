@@ -404,13 +404,13 @@ def setPointsToAward(sectionName, pointsToAward):
         return FINAL_TEAMS_POINTS
     elif sectionName == "Vinder:":
         return WINNER_POINTS
-    elif sectionName == "Hvor langt når Danmark:":
+    elif sectionName == "Hvor langt når England:":
         return HOW_FAR_DANMARK_REACHES_POINTS
     elif sectionName == "Topscorer:":
         return TOP_SCORER_POINTS
     elif sectionName == "Dansker der scorer:":
         return DANE_TO_SCORE_POINTS
-    elif sectionName == "Hvor mange mål scorer den valgte dansker:":
+    elif sectionName == "Hvor mange mål scorer den valgte englænder:":
         return HOW_MANY_GOALS_BY_DANE_POINTS
     elif sectionName == "Spiller der får rødt kort:":
         return RED_CARDED_PLAYER_POINTS

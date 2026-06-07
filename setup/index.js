@@ -125,51 +125,57 @@ function showToast(message) {
 }
 
 function updateHowFarDenmarkReaches() {
+    console.log("Updating how far Denmark reaches...");
     let howFarDenmarkReachesResultBackup = howFarDenmarkReachesResult;
+
     let ro32Div;
     if (HAS_ROUND_OF_32)
         ro32Div = document.getElementById("ro32Div");
+
     let ro16Div = document.getElementById("ro16Div");
     let ro8Div = document.getElementById("ro8Div");
     let semiDiv = document.getElementById("semiDiv");
     let finalsDiv = document.getElementById("finalsDiv");
 
-    let denmarkIsInFinals = Array.from(finalsDiv.querySelectorAll('select')).some(select => select.value === "Denmark");
-    let denmarkIsInSemi = Array.from(semiDiv.querySelectorAll('select')).some(select => select.value === "Denmark");
-    let denmarkIsInRo8 = Array.from(ro8Div.querySelectorAll('select')).some(select => select.value === "Denmark");
-    let denmarkIsInRo16 = Array.from(ro16Div.querySelectorAll('select')).some(select => select.value === "Denmark");
-    let denmarkIsInRo32 = false;
-    if (HAS_ROUND_OF_32)
-        denmarkIsInRo32 = Array.from(ro32Div.querySelectorAll('select')).some(select => select.value === "Denmark");
-    if (denmarkIsInRo8 || denmarkIsInSemi || denmarkIsInFinals) {
-        howFarDenmarkReachesResult = "Mindst en kvartfinale";
+    const isIn = (div) =>
+        div && Array.from(div.querySelectorAll('select'))
+            .some(select => select.value === "England");
+
+    let isInFinal = isIn(finalsDiv);
+    let isInSemi = isIn(semiDiv);
+    let isInRo8 = isIn(ro8Div);
+    let isInRo16 = isIn(ro16Div);
+    let isInRo32 = HAS_ROUND_OF_32 ? isIn(ro32Div) : false;
+
+    if (isInFinal) {
+        howFarDenmarkReachesResult = "Finalen";
     }
-    else if (denmarkIsInRo16) {
-        howFarDenmarkReachesResult = "ud i ottendedelsfinalerne";
+    else if (isInSemi) {
+        howFarDenmarkReachesResult = "Semifinale";
     }
-    else if (denmarkIsInRo32) {
-        howFarDenmarkReachesResult = "ud i sekstendelsfinalen";
+    else if (isInRo8) {
+        howFarDenmarkReachesResult = "Kvartfinale";
+    }
+    else if (isInRo16) {
+        howFarDenmarkReachesResult = "Ottendedelsfinalerne";
+    }
+    else if (isInRo32) {
+        howFarDenmarkReachesResult = "Sekstendedelsfinalerne";
     }
     else {
         howFarDenmarkReachesResult = "Ud i gruppespillet";
-    } 
-    
-    // if (Array.from(ro16Div.querySelectorAll('select')).every(select => select.value !== "") 
-    //     && !Array.from(ro16Div.querySelectorAll('select')).some(select => select.value === "Denmark")) {
-    //     howFarDenmarkReachesResult = "Ud i grupperspillet";
-    // }
-        
-    elem = document.getElementById("howFarDenmarkReachesResultElement");
-    //if the results has not changed then dont update the text (also avoid the random messages)
+    }
+
+    let elem = document.getElementById("howFarDenmarkReachesResultElement");
+
     if (howFarDenmarkReachesResultBackup === howFarDenmarkReachesResult)
         return;
+
     elem.textContent = howFarDenmarkReachesResult;
-      
-    let randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
-    elem.textContent += randomMessage;
+
+    // let randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
+    // elem.textContent += randomMessage;
 }
-
-
 
 
 //adding stuff
@@ -363,13 +369,13 @@ function exportTipskupon() {
     }
     let daneToScoreValue = document.getElementById("daneScoringDiv").querySelector('input').value;
     if (daneToScoreValue === "") {
-        showToast("Du har ikke udfyldt dansker der scorer");
+        showToast("Du har ikke udfyldt englænder der scorer");
         return;
     }
     else {
         let howManyGoalsDaneScoresValue = document.getElementById("howManyGoalsDaneScoresInput").value;
         if (howManyGoalsDaneScoresValue === "") {
-            showToast("Du har ikke udfyldt hvor mange mål den dansker scorer");
+            showToast("Du har ikke udfyldt hvor mange mål den englænder scorer");
             return
         }
     }
@@ -554,8 +560,11 @@ function load() {
     if (topGoalScorerValue !== "")
         document.getElementById("topGoalScorerDiv").querySelector('input').value = topGoalScorerValue;
         
+    console.log("ro8Values: ", ro8Values);
+    console.log("semiValues: ", semiValues);
+    console.log("finaleValues: ", finaleValues);
     //how far denmark reaches ???
-    if (ro8Values.some(value => value === "Denmark") || semiValues.some(value => value === "Denmark") || finaleValues.some(value => value === "Denmark"))
+    if (ro8Values.some(value => value === "England") || semiValues.some(value => value === "England") || finaleValues.some(value => value === "England"))
         updateHowFarDenmarkReaches();
     
     //dane to score + how many goals dane scores
@@ -689,6 +698,7 @@ function handleTeamColoring() {
 
 //den skal også håndtere at frigive hvis man vælger et andet holdt (altså bruge prev value)
 function handleKnockoutSelectInput(currentSelect, teamsDiv) {
+    
     let selectedOptionValue = currentSelect.options[currentSelect.selectedIndex].value;
     for (let select of teamsDiv.querySelectorAll('select')) {
         if (select !== currentSelect) { // Skip the current select
@@ -713,7 +723,7 @@ function handleKnockoutSelectInput(currentSelect, teamsDiv) {
     }
     //check if denmark was added/removed:
     let prevValue = currentSelect.getAttribute('data-prev-value');
-    if (currentSelect.value === "Denmark" || prevValue === "Denmark") {
+    if (currentSelect.value === "England" || prevValue === "England") {
         updateHowFarDenmarkReaches();
     }
 }
@@ -918,6 +928,7 @@ function addMatches() {
 }
 
 function addTeamTips() {
+    print(teams);
     let outerDiv = document.createElement("div");
     outerDiv.style.display = "flex";
     outerDiv.style.flexDirection = "column";
@@ -1106,14 +1117,14 @@ function getHowFarDenmarkReaches() {
             tempTeamsList.push(select.value);
         });
     });
-    if (tempTeamsList.includes("Denmark")) {
+    if (tempTeamsList.includes("England")) {
         return "Mindst en kvartfinale";
     }
     
     //out in ro16
     ro16Div = document.getElementById("ro16Div");
     for (let select of ro16Div.querySelectorAll('select')) {
-        if (select.value === "Denmark") {
+        if (select.value === "England") {
             return "Ud i ottendedelsfinalerne";
         }
     }
@@ -1123,7 +1134,7 @@ function getHowFarDenmarkReaches() {
         const ro32Div = document.getElementById("ro32Div");
         if (ro32Div) {
             for (let select of ro32Div.querySelectorAll('select')) {
-                if (select.value === "Denmark") {
+                if (select.value === "England") {
                     return "Ud i sekstendelsfinalen";
                 }
             }
@@ -1138,7 +1149,7 @@ function getHowFarDenmarkReaches() {
 function addHowFarDenmarkReaches() {
     let howFarDenmarkReachesDiv = document.createElement("div");
     let howFarDenmarkReachesHeader = document.createElement("h2");
-    howFarDenmarkReachesHeader.textContent = "Hvor langt når Danmark (udfyldes automatisk)?";
+    howFarDenmarkReachesHeader.textContent = "Hvor langt når England (udfyldes automatisk)?";
     howFarDenmarkReachesHeader.style.display = 'inline-block';
     howFarDenmarkReachesHeader.style.marginRight = '10px';
     howFarDenmarkReachesHeader.id = "howFarDenmarkReachesHeader";
@@ -1204,7 +1215,7 @@ function addDaneToScore() {
     let daneToScoreHeaderDiv = document.createElement("div");
     daneToScoreHeaderDiv.style.width = "100%";
     let daneToScoreHeader = document.createElement("h2");
-    daneToScoreHeader.textContent = "Dansker der scorer:";
+    daneToScoreHeader.textContent = "Englænder der scorer (Harry Kane undtaget):";
     daneToScoreHeader.id = "daneToScoreHeader";
     daneToScoreHeader.style.display = 'inline-block';
     daneToScoreHeader.style.marginRight = '10px';
@@ -1335,17 +1346,14 @@ function addPointsInfoOnHeaders() {
     
     
     let howFarDenmarkReachesHeader = document.getElementById("howFarDenmarkReachesHeader"); //3
-    showPointsInfo(howFarDenmarkReachesHeader,`${HOW_FAR_DANMARK_REACHES_POINTS} point for at gætte hvor langt Danmark når`);
+    showPointsInfo(howFarDenmarkReachesHeader,`${HOW_FAR_DANMARK_REACHES_POINTS} point for at gætte hvor langt England når`);
     let topGoalScorerHeader = document.getElementById("topGoalScorerHeader"); //6
     showPointsInfo(topGoalScorerHeader,`${TOP_SCORER_POINTS} point for at gætte topscoreren`);
     let daneToScoreHeader = document.getElementById("daneToScoreHeader"); //2
-    showPointsInfo(daneToScoreHeader,`${DANE_TO_SCORE_POINTS} point for at gætte en dansker der scorer`);
+    showPointsInfo(daneToScoreHeader,`${DANE_TO_SCORE_POINTS} point for at gætte en englænder der scorer`);
     //how many goals he scores is done in another function as this text is not always shown 
     let playerToGetRedCardedHeader = document.getElementById("playerToGetRedCardedHeader"); //4
     showPointsInfo(playerToGetRedCardedHeader,`${RED_CARDED_PLAYER_POINTS} point for at gætte en spiller der får rødt kort`);
-    
-    
-
 }  
     
     
