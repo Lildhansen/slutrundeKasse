@@ -72,7 +72,7 @@ let numberOfTeamsInRo16 = 16;
 let numberOfTeamsInRo8 = 8;
 let numOfTeamsInSemiFinals = 4;
 let numOfTeamsInFinals = 2;
-let currentSlutRundeYear = 2024;
+let currentSlutRundeYear = 2024; //should be 2026 but i didnt update it when saving changes so ignore now
 
 let howFarDenmarkReachesResult = "";
 
@@ -90,6 +90,15 @@ function getUniqueTeams() {
     return uniqueMatches
 }
 
+
+// Global state for knockout rounds - each round manages only its own selected teams
+const roundState = {
+    ro32: new Set(),
+    ro16: new Set(),
+    ro8: new Set(),
+    semi: new Set(),
+    final: new Set()
+};
 
 //they dont really stack well - if more should be added at the same time maybe look into this
 function showToast(message) {
@@ -527,6 +536,9 @@ function load() {
                 document.getElementById("ro32Div").querySelectorAll('select')[i].value = ro32Values[i];
             }
         }
+        // Rebuild state and re-render disabled options for ro32
+        rebuildRoundState('ro32', document.getElementById("ro32Div"));
+        updateRoundOptions('ro32', document.getElementById("ro32Div"));
     }
     //ro16
     for (let i = 0; i < ro16Values.length; i++) {
@@ -534,24 +546,39 @@ function load() {
             document.getElementById("ro16Div").querySelectorAll('select')[i].value = ro16Values[i];
         }
     }
+    // Rebuild state and re-render disabled options for ro16
+    rebuildRoundState('ro16', document.getElementById("ro16Div"));
+    updateRoundOptions('ro16', document.getElementById("ro16Div"));
+    
     //ro8
     for (let i = 0; i < ro8Values.length; i++) {
         if (ro8Values[i] !== "") {
             document.getElementById("ro8Div").querySelectorAll('select')[i].value = ro8Values[i];
         }
     }
+    // Rebuild state and re-render disabled options for ro8
+    rebuildRoundState('ro8', document.getElementById("ro8Div"));
+    updateRoundOptions('ro8', document.getElementById("ro8Div"));
+    
     //semi
     for (let i = 0; i < semiValues.length; i++) {
         if (semiValues[i] !== "") {
             document.getElementById("semiDiv").querySelectorAll('select')[i].value = semiValues[i];
         }
     }
+    // Rebuild state and re-render disabled options for semi
+    rebuildRoundState('semi', document.getElementById("semiDiv"));
+    updateRoundOptions('semi', document.getElementById("semiDiv"));
+    
     //finale
     for (let i = 0; i < finaleValues.length; i++) {
         if (finaleValues[i] !== "") {
             document.getElementById("finalsDiv").querySelectorAll('select')[i].value = finaleValues[i];
         }
     }
+    // Rebuild state and re-render disabled options for final
+    rebuildRoundState('final', document.getElementById("finalsDiv"));
+    updateRoundOptions('final', document.getElementById("finalsDiv"));
     //winner
     if (winnerValue !== "")
         document.getElementById("winnerDiv").querySelector('select').value = winnerValue;
@@ -580,7 +607,6 @@ function load() {
         
         
     updateRemainingTipsOnLoad();
-    updateAvailableTeamsOnLoad(); 
     handleTeamColoring();
 }
 
@@ -696,36 +722,52 @@ function handleTeamColoring() {
 
 
 
-//den skal også håndtere at frigive hvis man vælger et andet holdt (altså bruge prev value)
-function handleKnockoutSelectInput(currentSelect, teamsDiv) {
+// Rebuild roundState for a round from DOM values (used after loading)
+function rebuildRoundState(roundKey, container) {
+    roundState[roundKey].clear();
+    for (let select of container.querySelectorAll('select')) {
+        if (select.value !== "") {
+            roundState[roundKey].add(select.value);
+        }
+    }
+}
+
+// Update disabled options for a round based on roundState
+function updateRoundOptions(roundKey, container) {
+    const selectedTeams = roundState[roundKey];
+    for (let select of container.querySelectorAll('select')) {
+        for (let option of select.options) {
+            if (option.value === "") {
+                option.disabled = false;
+            } else if (selectedTeams.has(option.value)) {
+                // Allow editing own selection
+                const isCurrentSelect = select.value === option.value;
+                option.disabled = !isCurrentSelect;
+            } else {
+                option.disabled = false;
+            }
+        }
+    }
+}
+
+// Handle knockout select changes - update state and re-render options for that round only
+function handleKnockoutSelectInput(currentSelect, roundKey, container) {
+    const currentValue = currentSelect.value;
+    const previousValue = currentSelect.getAttribute('data-prev-value') || "";
     
-    let selectedOptionValue = currentSelect.options[currentSelect.selectedIndex].value;
-    for (let select of teamsDiv.querySelectorAll('select')) {
-        if (select !== currentSelect) { // Skip the current select
-            for (let option of select.options) {
-                if (option.value === selectedOptionValue) {
-                    option.disabled = true;
-                }
-            }
-        }
-    }
-    let previousValue = currentSelect.getAttribute('data-prev-value');
-    if (previousValue !== "") {
-        for (let select of teamsDiv.querySelectorAll('select')) {
-            if (select !== currentSelect) { // Skip the current select
-                for (let option of select.options) {
-                    if (option.value === previousValue) {
-                        option.disabled = false;
-                    }
-                }
-            }
-        }
-    }
-    //check if denmark was added/removed:
-    let prevValue = currentSelect.getAttribute('data-prev-value');
-    if (currentSelect.value === "England" || prevValue === "England") {
+    // Update data-prev-value for next change
+    currentSelect.setAttribute('data-prev-value', currentValue);
+    
+    // Rebuild state from DOM to ensure it's always consistent with what's actually selected
+    rebuildRoundState(roundKey, container);
+    updateRoundOptions(roundKey, container);
+    
+    // Track if England was added/removed for auto-update
+    if (currentValue === "England" || previousValue === "England") {
         updateHowFarDenmarkReaches();
     }
+    
+    handleTeamColoring();
 }
 
 
@@ -957,17 +999,17 @@ function addTeamTips() {
             ro32MatchSelect.add(defaultOptionRo32);
 
             ro32MatchSelect.style.margin = "5px";
-            ro32MatchSelect.setAttribute('data-prev-value', ro32MatchSelect.value);
+            ro32MatchSelect.setAttribute('data-prev-value', "");
 
             // Add teams
             for (const team of teams) {
                 ro32MatchSelect.add(new Option(team));
-                ro32MatchSelect.onchange = function () {
-                    handleKnockoutSelectInput(this, ro32Div);
-                    this.setAttribute('data-prev-value', this.value);
-                    handleTeamColoring();
-                };
             }
+            
+            // Single onchange handler that updates state for ro32 only
+            ro32MatchSelect.onchange = function () {
+                handleKnockoutSelectInput(this, 'ro32', ro32Div);
+            };
 
             ro32Div.appendChild(ro32MatchSelect);
         }
@@ -990,15 +1032,16 @@ function addTeamTips() {
         defaultOptionRo16.disabled = true;
         ro16MatchSelect.add(defaultOptionRo16);
         ro16MatchSelect.style.margin = "5px";
-        ro16MatchSelect.setAttribute('data-prev-value', ro16MatchSelect.value);
+        ro16MatchSelect.setAttribute('data-prev-value', "");
         for (const team of teams) {
             ro16MatchSelect.add(new Option(team));
-            ro16MatchSelect.onchange = function() {
-                handleKnockoutSelectInput(this, ro16Div);
-                this.setAttribute('data-prev-value', this.value);
-                handleTeamColoring();
-            };
         }
+        
+        // Single onchange handler that updates state for ro16 only
+        ro16MatchSelect.onchange = function() {
+            handleKnockoutSelectInput(this, 'ro16', ro16Div);
+        };
+        
         ro16Div.appendChild(ro16MatchSelect);
     }
     outerDiv.appendChild(ro16Div);
@@ -1017,18 +1060,19 @@ function addTeamTips() {
         defaultOptionRo8.disabled = true;
         ro8MatchSelect.add(defaultOptionRo8);
         ro8MatchSelect.style.margin = "5px";
-        ro8MatchSelect.setAttribute('data-prev-value', ro8MatchSelect.value);
+        ro8MatchSelect.setAttribute('data-prev-value', "");
         for (const team of teams) {
             ro8MatchSelect.add(new Option(team));
-            ro8MatchSelect.onchange = function() {
-                handleKnockoutSelectInput(this, ro8Div);
-                this.setAttribute('data-prev-value', this.value);
-                handleTeamColoring();
-            }
-            ro8Div.appendChild(ro8MatchSelect);
         }
-        outerDiv.appendChild(ro8Div);
+        
+        // Single onchange handler that updates state for ro8 only
+        ro8MatchSelect.onchange = function() {
+            handleKnockoutSelectInput(this, 'ro8', ro8Div);
+        };
+        
+        ro8Div.appendChild(ro8MatchSelect);
     }
+    outerDiv.appendChild(ro8Div);
     
     //add semi-finals
     let semiDiv = document.createElement("div");
@@ -1045,15 +1089,16 @@ function addTeamTips() {
         defaultOptionSemis.disabled = true;
         semiMatchSelect.add(defaultOptionSemis);
         semiMatchSelect.style.margin = "5px";
-        semiMatchSelect.setAttribute('data-prev-value', semiMatchSelect.value);
+        semiMatchSelect.setAttribute('data-prev-value', "");
         for (const team of teams) {
             semiMatchSelect.add(new Option(team));
-            semiMatchSelect.onchange = function() {
-                handleKnockoutSelectInput(this, semiDiv);
-                this.setAttribute('data-prev-value', this.value);
-                handleTeamColoring();
-            };
         }
+        
+        // Single onchange handler that updates state for semi only
+        semiMatchSelect.onchange = function() {
+            handleKnockoutSelectInput(this, 'semi', semiDiv);
+        };
+        
         semiDiv.appendChild(semiMatchSelect);
     }
     outerDiv.appendChild(semiDiv);
@@ -1073,15 +1118,16 @@ function addTeamTips() {
         defaultOptionFinals.disabled = true;
         finalsMatchSelect.add(defaultOptionFinals);
         finalsMatchSelect.style.margin = "5px";
-        finalsMatchSelect.setAttribute('data-prev-value', finalsMatchSelect.value);
+        finalsMatchSelect.setAttribute('data-prev-value', "");
         for (const team of teams) {
             finalsMatchSelect.add(new Option(team));
-            finalsMatchSelect.onchange = function() {
-                handleKnockoutSelectInput(this, finalsDiv);
-                this.setAttribute('data-prev-value', this.value);
-                handleTeamColoring();
-            }
         }
+        
+        // Single onchange handler that updates state for final only
+        finalsMatchSelect.onchange = function() {
+            handleKnockoutSelectInput(this, 'final', finalsDiv);
+        };
+        
         finalsDiv.appendChild(finalsMatchSelect);
     }
     outerDiv.appendChild(finalsDiv);

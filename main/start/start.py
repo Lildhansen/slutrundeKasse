@@ -3,7 +3,7 @@ from main.classes.Player import Player
 from main.classes.Team import Team
 from main.classes.Excel import setupExcelFile
 from main.classes.Email import sendInitialEmail
-from util.constants import HAS_ROUND_OF_32
+from main.util.constants import HAS_ROUND_OF_32
 
 # non-own imports
 import orjson

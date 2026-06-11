@@ -10,7 +10,7 @@ green_fill = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="so
 red_fill = PatternFill(start_color="FFB6C1", end_color="FFB6C1", fill_type="solid")
 #the one where it at first says different teams (croatia - denmark)
 TEAM_COLUMN = 2
-from util.constants import HAS_ROUND_OF_32, GROUP_STAGE_MATCHES_POINTS, RO32_TEAMS_POINTS, RO16_TEAMS_POINTS, RO8_TEAMS_POINTS, SEMI_FINAL_TEAMS_POINTS, FINAL_TEAMS_POINTS, WINNER_POINTS, TOP_SCORER_POINTS, HOW_FAR_DANMARK_REACHES_POINTS, DANE_TO_SCORE_POINTS, HOW_MANY_GOALS_BY_DANE_POINTS, RED_CARDED_PLAYER_POINTS
+from main.util.constants import HAS_ROUND_OF_32, GROUP_STAGE_MATCHES_POINTS, RO32_TEAMS_POINTS, RO16_TEAMS_POINTS, RO8_TEAMS_POINTS, SEMI_FINAL_TEAMS_POINTS, FINAL_TEAMS_POINTS, WINNER_POINTS, TOP_SCORER_POINTS, HOW_FAR_DANMARK_REACHES_POINTS, DANE_TO_SCORE_POINTS, HOW_MANY_GOALS_BY_DANE_POINTS, RED_CARDED_PLAYER_POINTS
 
 #sets up the text on the left side (so not the actual data for the players)
 def setupNonPlayerText(ws):
@@ -66,16 +66,16 @@ def setupNonPlayerText(ws):
     #add subtotal row
     row = addSubTotalRowHeader(ws,row,column)
     #How far Denmark goes
-    ws.cell(row=row,column=column,value="Hvor langt når Danmark:")
+    ws.cell(row=row,column=column,value="Hvor langt når England:")
     row += 1
     #topscorer
     ws.cell(row=row,column=column,value="Topscorer:")
     row+=1
     #dane to score
-    ws.cell(row=row,column=column,value="Dansker der scorer:")
+    ws.cell(row=row,column=column,value="Englænder der scorer:")
     row += 1
     #how many goals by dane
-    ws.cell(row=row,column=column,value="Hvor mange mål scorer den valgte dansker:")
+    ws.cell(row=row,column=column,value="Hvor mange mål scorer den valgte englænder:")
     #player to get red card
     row += 1
     ws.cell(row=row,column=column,value="Spiller der får rødt kort:")
@@ -408,7 +408,7 @@ def setPointsToAward(sectionName, pointsToAward):
         return HOW_FAR_DANMARK_REACHES_POINTS
     elif sectionName == "Topscorer:":
         return TOP_SCORER_POINTS
-    elif sectionName == "Dansker der scorer:":
+    elif sectionName == "Englænder der scorer:":
         return DANE_TO_SCORE_POINTS
     elif sectionName == "Hvor mange mål scorer den valgte englænder:":
         return HOW_MANY_GOALS_BY_DANE_POINTS

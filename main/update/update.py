@@ -5,7 +5,7 @@ import requests, json, os
 
 import main.classes.Excel as Excel
 import main.classes.Email as Email
-from util.constants import HAS_ROUND_OF_32
+from main.util.constants import HAS_ROUND_OF_32
 
 #CONSTANTS
 groupStageSlugName = "group-stage"
@@ -16,7 +16,7 @@ semiFinalsSlugName = "semifinals"
 finalSlugName = "final"
 
 #config variables
-firstDayOfTournament = datetime.datetime(year=2022, month=11, day=20)
+firstDayOfTournament = datetime.datetime(year=2026, month=6, day=13)
 tournamentType = "fifa.world"
 if HAS_ROUND_OF_32:
     firstKnockoutType = ro32SlugName
