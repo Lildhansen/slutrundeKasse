@@ -204,7 +204,6 @@ def updateExcelFile(groupStageMatches, teamsInRo16, teamsInRo8, teamsInSemiFinal
     resultColumn = TEAM_COLUMN + numOfPlayers
     if groupStageMatches != []:
         row = handleGroupStageMatches(groupStageMatches, ws, resultColumn, row)
-    print(row)
     if teamsInRo32 != []:
         row = handleKnockoutStageMatches(teamsInRo32, ws, resultColumn, row)
     if teamsInRo16 != []:
@@ -232,12 +231,13 @@ def getNumOfPlayers(ws):
     return column - 2 #not counting the first two columns (group and match)
 
 def handleGroupStageMatches(groupStageMatches, ws, resultColumn, row):
+    print("Groups stage matches:")
+    print(groupStageMatches)
     index = 0
     print(len(groupStageMatches))
     while True:
         if index >= len(groupStageMatches):
             break
-        print(groupStageMatches[index])
         cell_value = ws.cell(row=row, column=TEAM_COLUMN).value
         if cell_value is None:
             break
@@ -250,7 +250,10 @@ def handleGroupStageMatches(groupStageMatches, ws, resultColumn, row):
         while currentColumn < resultColumn:
             playerCell = ws.cell(row=row, column=currentColumn)
             playerCellValue = playerCell.value
-            if playerCellValue and groupStageMatches[index]['result'] in playerCellValue: #player predicted correctly
+            print(f"Index: {index}")
+            print(f"Player cell value: {playerCellValue}")
+            print(f"Expected result: {groupStageMatches[index]['result']}")
+            if playerCellValue is not None and str(groupStageMatches[index]['result']) in str(playerCellValue): #player predicted correctly
                 playerCell.fill = green_fill
             else:
                 playerCell.fill = red_fill
@@ -293,7 +296,8 @@ def handleKnockoutStageMatches(teams, ws, resultColumn, row):
             #holdet i cellen er ikke i teams listen: gå videre til næste række
         # ingen hold i cellen: indsæt det første hold i teams listen
         else:
-            cell.value = teams.pop(0)
+            if len(teams) > 0:
+                cell.value = teams.pop(0)
         row += 1
     
     #reset row
@@ -314,7 +318,11 @@ def handleKnockoutStageMatches(teams, ws, resultColumn, row):
     return row
 
 def handleFinaleTeams(teams, ws, resultColumn, row):
-    row += 2 #from subtotal to first team in final
+    print(teams)
+    #subtotal from previous section
+    while ws.cell(row=row, column=1).value != "Hold i finalen:":
+        row += 1
+    row += 1 #from Hold i finalen: to first team in final
     column = TEAM_COLUMN + 1 #the column of the first player
 
     while column < resultColumn:

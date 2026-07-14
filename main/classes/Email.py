@@ -50,8 +50,7 @@ class Email:
         message['Subject'] = self.subject
         message.set_content(self.mailBody)
     def connectToSmtpAndSendMail(self,message):
-        smtp = smtplib.SMTP_SSL(self.server)
-        smtp.connect(self.server,self.port)
+        smtp = smtplib.SMTP_SSL(self.server, self.port, local_hostname='localhost')
         smtp.login(self.sender,self.password)
         smtp.sendmail(to_addrs=self.receivers,msg=message.as_string(),from_addr=self.sender)
         smtp.quit()

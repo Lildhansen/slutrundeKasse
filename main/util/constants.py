@@ -1,4 +1,5 @@
 HAS_ROUND_OF_32 = True
+USES_SHARED_EXCEL_FILE = True
 
 #points: (these are actually not used at the moment but really they should be)
 #to add these points, we also need to add it to the index.js file to get it in the tipskupon we send out to the users

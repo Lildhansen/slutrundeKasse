@@ -5,7 +5,7 @@ import requests, json, os
 
 import main.classes.Excel as Excel
 import main.classes.Email as Email
-from main.util.constants import HAS_ROUND_OF_32
+from main.util.constants import HAS_ROUND_OF_32, USES_SHARED_EXCEL_FILE
 
 #CONSTANTS
 groupStageSlugName = "group-stage"
@@ -16,7 +16,7 @@ semiFinalsSlugName = "semifinals"
 finalSlugName = "final"
 
 #config variables
-firstDayOfTournament = datetime.datetime(year=2026, month=6, day=13)
+firstDayOfTournament = datetime.datetime(year=2026, month=6, day=11)
 tournamentType = "fifa.world"
 if HAS_ROUND_OF_32:
     firstKnockoutType = ro32SlugName
@@ -153,9 +153,16 @@ def loadPreviousDateRun():
             if date_str:
                 return datetime.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
     return firstDayOfTournament
-        
-#for 2026 this should be getRo32Teams():
 
+def updateSharedExcelFile():
+    local_file_path = os.path.join('main', 'data', 'slutrundeKasse.xlsx')
+    shared_file_path = r"C:\Users\madsl\oneDrivePersonal\OneDrive\slutrundeKasse\slutrundeKasse.xlsx"
+    # Copy the local file to the shared location
+    with open(local_file_path, 'rb') as src_file:
+        with open(shared_file_path, 'wb') as dst_file:
+            dst_file.write(src_file.read()) 
+    
+#for 2026 this should be getRo32Teams():
 def setTestData():
     global groupStageMatches, teamsInRo16, teamsInRo8, teamsInSemiFinals, teamsInFinal, winnerTeam
     # Hardcoded tournament data
@@ -196,31 +203,32 @@ def setTestData():
 
 if __name__ == "__main__":
     currentDate = datetime.datetime.today() #set it to other day for testing
-    currentDate = datetime.datetime(year=2022, month=12, day=18) #last day of world cup 2022
     # initially is the previous date run (or the first day of the tournament), but is the one we use to increment up to current date
-    # previousDateRun = loadPreviousDateRun()
-    # while previousDateRun is not None and previousDateRun <= currentDate:
-    #     matchType = getMatchTypeOnDate(previousDateRun.date())
-    #     if matchType == groupStageSlugName:
-    #         handleGroupStageMatchesOnDay(previousDateRun)
-    #     elif matchType == "3rd-place": #ignore 3rd place match
-    #         pass
-    #     elif matchType == None:
-    #         print("No matches on date", previousDateRun)
-    #         pass
-    #     else:
-    #         shouldGetRo16Teams = True
-    #         handleKnockoutMatchesOnDay(previousDateRun, matchType)
-    #     previousDateRun += datetime.timedelta(days=1)
+    previousDateRun = loadPreviousDateRun()
+    while previousDateRun is not None and previousDateRun <= currentDate:
+        matchType = getMatchTypeOnDate(previousDateRun.date())
+        if matchType == groupStageSlugName:
+            handleGroupStageMatchesOnDay(previousDateRun)
+        elif matchType == "3rd-place": #ignore 3rd place match
+            pass
+        elif matchType == None:
+            print("No matches on date", previousDateRun)
+            pass
+        else:
+            shouldGetRo16Teams = True
+            handleKnockoutMatchesOnDay(previousDateRun, matchType)
+        previousDateRun += datetime.timedelta(days=1)
 
-    setTestData() #comment out to use live data
-    
+    # setTestData() #comment out to use live data
     if HAS_ROUND_OF_32:
         Excel.updateExcelFile(groupStageMatches, teamsInRo16, teamsInRo8, teamsInSemiFinals, teamsInFinal, winnerTeam, teamsInRo32)
     else:
         Excel.updateExcelFile(groupStageMatches, teamsInRo16, teamsInRo8, teamsInSemiFinals, teamsInFinal, winnerTeam)
     # updatePreviousDateRun(currentDate)
     # Email.sendPeriodicMail()
+    if USES_SHARED_EXCEL_FILE:
+        updateSharedExcelFile()
+
 
 
 

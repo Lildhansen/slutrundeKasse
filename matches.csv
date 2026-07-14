@@ -1,20 +1,20 @@
 home team,away team,group
 Mexico,South Africa,Group A
 South Korea,Czechia,Group A
-Canada,Bosnia and Herzegovina,Group B
+Canada,Bosnia-Herzegovina,Group B
 United States,Paraguay,Group D
 Qatar,Switzerland,Group B
 Brazil,Morocco,Group C
 Haiti,Scotland,Group C
 Australia,Türkiye,Group D
-Germany,Curacao,Group E
+Germany,Curaçao,Group E
 Netherlands,Japan,Group F
 Ivory Coast,Ecuador,Group E
 Sweden,Tunisia,Group F
 Spain,Cape Verde,Group H
 Belgium,Egypt,Group G
 Saudi Arabia,Uruguay,Group H
-IR Iran,New Zealand,Group G
+Iran,New Zealand,Group G
 France,Senegal,Group I
 Iraq,Norway,Group I
 Argentina,Algeria,Group J
@@ -24,7 +24,7 @@ England,Croatia,Group L
 Ghana,Panama,Group L
 Uzbekistan,Colombia,Group K
 Czechia,South Africa,Group A
-Switzerland,Bosnia and Herzegovina,Group B
+Switzerland,Bosnia-Herzegovina,Group B
 Canada,Qatar,Group B
 Mexico,South Korea,Group A
 United States,Australia,Group D
@@ -33,10 +33,10 @@ Brazil,Haiti,Group C
 Türkiye,Paraguay,Group D
 Netherlands,Sweden,Group F
 Germany,Ivory Coast,Group E
-Ecuador,Curacao,Group E
+Ecuador,Curaçao,Group E
 Tunisia,Japan,Group F
 Spain,Saudi Arabia,Group H
-Belgium,IR Iran,Group G
+Belgium,Iran,Group G
 Uruguay,Cape Verde,Group H
 New Zealand,Egypt,Group G
 Argentina,Austria,Group J
@@ -47,13 +47,13 @@ Portugal,Uzbekistan,Group K
 England,Ghana,Group L
 Panama,Croatia,Group L
 Colombia,Congo DR,Group K
-Bosnia and Herzegovina,Qatar,Group B
+Bosnia-Herzegovina,Qatar,Group B
 Switzerland,Canada,Group B
 Morocco,Haiti,Group C
 Scotland,Brazil,Group C
 Czechia,Mexico,Group A
 South Africa,South Korea,Group A
-Curacao,Ivory Coast,Group E
+Curaçao,Ivory Coast,Group E
 Ecuador,Germany,Group E
 Japan,Sweden,Group F
 Tunisia,Netherlands,Group F
@@ -63,7 +63,7 @@ Norway,France,Group I
 Senegal,Iraq,Group I
 Cape Verde,Saudi Arabia,Group H
 Uruguay,Spain,Group H
-Egypt,IR Iran,Group G
+Egypt,Iran,Group G
 New Zealand,Belgium,Group G
 Croatia,Ghana,Group L
 Panama,England,Group L
